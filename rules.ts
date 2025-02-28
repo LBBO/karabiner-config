@@ -83,6 +83,9 @@ const commonLayers: HyperKeyLayers = {
   // s = "System"
   s: {
     c: deeplink('raycast://extensions/raycast/system/open-camera'),
+    m: deeplink(
+      'raycast://extensions/Quentin23Soleil/mute-microphone/toggle-mute',
+    ),
     // *A*ll *A*pps
     a: app('Mission Control'),
     u: {
@@ -96,14 +99,6 @@ const commonLayers: HyperKeyLayers = {
       to: [
         {
           key_code: 'volume_decrement',
-        },
-      ],
-    },
-    // m = "Mute"
-    m: {
-      to: [
-        {
-          key_code: 'mute',
         },
       ],
     },
