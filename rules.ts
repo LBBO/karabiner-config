@@ -20,7 +20,6 @@ const commonLayers: HyperKeyLayers = {
 
   // o = "Open" applications
   o: {
-    a: app('Arc'),
     b: app('Bruno'),
     c: deeplink('raycast://script-commands/open-calendar'),
     f: app('Finder'),
