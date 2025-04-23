@@ -46,6 +46,32 @@ yarn run watch
 
 watches the TypeScript files and rebuilds whenever they change.
 
+## Setting up Deep Links
+
+### Slack ([Docs](https://api.slack.com/reference/deep-linking#open_a_direct_message))
+
+To open a specific user's chat, you need the team ID and user ID.
+
+You can get the team ID by opening the team's slack in the browser, firing up the network tab and extracting it from the URL of the very first GET request. It should look like `https://app.slack.com/client/{teamID}/{something}`.
+
+The user ID can be obtained by viewing the person's profile (it should open in the sidebar), then clicking on the three dots and clicking "Copy member ID".
+
+The team ID always starts with a `T` and the user ID always starts with a `U`.
+
+The final deep link will then be
+
+```
+slack://user?team={teamID}&id={userID}
+```
+
+### Telegram
+
+Open a user's profile. If they have a username, it will be shown there (e.g. @somebody). The deep link will then be
+
+```
+tg://resolve?domain=@{username}
+```
+
 ## License
 
 Copyright (c) 2022 Maximilian Stoiber, licensed under the [MIT license](./LICENSE.md).
