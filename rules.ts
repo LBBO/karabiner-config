@@ -204,6 +204,7 @@ const commonLayers: HyperKeyLayers = {
     ),
     m: deeplink('raycast://extensions/raycast/navigation/search-menu-items'),
     p: deeplink('raycast://extensions/raycast/raycast/confetti'),
+    t: deeplink('raycast://extensions/raycast/translator/translate'),
     // 1: deeplink(
     //   "raycast://extensions/VladCuciureanu/toothpick/connect-favorite-device-1"
     // ),
