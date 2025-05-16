@@ -8,7 +8,7 @@ export const privateRules: HyperKeyLayers = {
     a: app('Zen Browser'),
     // *m*arkdown
     n: app('Notion'),
-    p: app('Preview'),
+    p: app('PyCharm Professional Edition'),
   },
 
   // c = "Chat"
