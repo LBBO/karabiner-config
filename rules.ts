@@ -203,6 +203,7 @@ const commonLayers: HyperKeyLayers = {
       'raycast://extensions/raycast/clipboard-history/clipboard-history',
     ),
     m: deeplink('raycast://extensions/raycast/navigation/search-menu-items'),
+    n: deeplink('raycast://extensions/raycast/raycast-notes/raycast-notes'),
     p: deeplink('raycast://extensions/raycast/raycast/confetti'),
     t: deeplink('raycast://extensions/raycast/translator/translate'),
     // 1: deeplink(
