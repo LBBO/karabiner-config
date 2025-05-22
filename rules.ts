@@ -127,13 +127,6 @@ const commonLayers: HyperKeyLayers = {
         },
       ],
     },
-    p: {
-      to: [
-        {
-          key_code: 'play_or_pause',
-        },
-      ],
-    },
     semicolon: {
       to: [
         {
@@ -178,16 +171,24 @@ const commonLayers: HyperKeyLayers = {
     },
   },
 
-  // m = "Music"
+  // m = "Music" or "Mouse"
   m: {
-    p: {
-      to: [{ key_code: 'play_or_pause' }],
+    // *M*ouse *C*lick
+    c: {
+      to: [
+        {
+          pointing_button: 'button1',
+        },
+      ],
+    },
+    b: {
+      to: [{ key_code: 'rewind' }],
     },
     n: {
       to: [{ key_code: 'fastforward' }],
     },
-    b: {
-      to: [{ key_code: 'rewind' }],
+    p: {
+      to: [{ key_code: 'play_or_pause' }],
     },
   },
 
