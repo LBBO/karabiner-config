@@ -5,6 +5,7 @@ export const workRules: HyperKeyLayers = {
   // o = "Open" applications
   o: {
     a: app('Arc'),
+    c: deeplink('raycast://script-commands/open-calendar'),
     e: app('Microsoft Excel'),
     l: app('Logseq'),
     // *P*laywright is the only Chromium I run at work

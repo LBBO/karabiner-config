@@ -21,7 +21,6 @@ const commonLayers: HyperKeyLayers = {
   // o = "Open" applications
   o: {
     b: app('Bruno'),
-    c: deeplink('raycast://script-commands/open-calendar'),
     f: app('Finder'),
     i: app('IntelliJ IDEA Ultimate'),
     // *l*iterature
@@ -41,6 +40,7 @@ const commonLayers: HyperKeyLayers = {
 
   // n = "New"
   n: {
+    c: deeplink('raycast://extensions/degouville/cursor-recent-projects/index'),
     t: {
       to: [
         // This shortcut is set in TickTick because the default

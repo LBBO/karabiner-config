@@ -6,6 +6,7 @@ export const privateRules: HyperKeyLayers = {
   o: {
     // Used to be *A*rc
     a: app('Zen Browser'),
+    c: app('Cursor'),
     // *m*arkdown
     n: app('Notion'),
     p: app('PyCharm Professional Edition'),
