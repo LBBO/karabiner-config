@@ -601,31 +601,6 @@ export const vimModeRules: KarabinerRules[] = [
           deactivate(VariableNames.Vim.GPressed),
         ],
       },
-      // TODO check this and then maybe add it
-      // {
-      //   description: 'Exit Vim Mode on Pointing Button Click',
-      //   type: 'basic',
-      //   conditions: [
-      //     {
-      //       name: vimModeVariableName,
-      //       type: 'variable_if',
-      //       value: 1,
-      //     },
-      //   ],
-      //   from: { any: 'pointing_button' },
-      //   to: [
-      //     {
-      //       set_variable: {
-      //         name: vimModeVariableName,
-      //         value: 0,
-      //       },
-      //     },
-      //     {
-      //       shell_command:
-      //         'osascript -e \'display notification with title "-- INSERT --"\'',
-      //     },
-      //   ],
-      // },
     ],
   },
   {
