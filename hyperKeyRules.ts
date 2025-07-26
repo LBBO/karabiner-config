@@ -6,7 +6,9 @@ const capsLockToHyperKey: Manipulator = {
   from: {
     key_code: 'caps_lock',
     modifiers: {
-      optional: modifiersKeys.filter(key => key !== 'any' && key !== 'right_shift' && key !== 'shift'),
+      optional: modifiersKeys.filter(
+        (key) => key !== 'any' && key !== 'right_shift' && key !== 'shift',
+      ),
     },
   },
   conditions: [
@@ -14,7 +16,7 @@ const capsLockToHyperKey: Manipulator = {
       type: 'variable_unless',
       name: vimModeVariableName,
       value: 1,
-    }
+    },
   ],
   to: [
     {

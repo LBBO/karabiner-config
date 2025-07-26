@@ -1,4 +1,11 @@
-import { Condition, KarabinerRules, To } from './types'
+import {
+  Condition,
+  KarabinerRules,
+  KeyCode,
+  Manipulator,
+  Modifiers,
+  To,
+} from './types'
 
 export const vimModeVariableName = 'vim_mode'
 const bundlesWithNativeVim = [
@@ -53,6 +60,57 @@ const notifyAboutInsertMode: To = {
     'osascript -e \'display notification with title "-- INSERT --"\'',
 }
 
+type VimModeLayerRules = Partial<
+  Record<KeyCode, { to: To[]; description?: string; modifiers?: Modifiers }>
+>
+
+const normalModeRules: VimModeLayerRules = {
+  h: {
+    to: [{ key_code: 'left_arrow' }],
+  },
+  j: {
+    to: [{ key_code: 'down_arrow' }],
+  },
+  k: {
+    to: [{ key_code: 'up_arrow' }],
+  },
+  l: {
+    to: [{ key_code: 'right_arrow' }],
+  },
+  w: {
+    to: [{ key_code: 'right_arrow', modifiers: ['option'] }],
+    description: 'Move to the next word',
+  },
+  b: {
+    to: [{ key_code: 'left_arrow', modifiers: ['option'] }],
+    description: 'Move to the previous word',
+  },
+  e: {
+    to: [{ key_code: 'right_arrow', modifiers: ['option'] }],
+    description: 'Move to the end of the word',
+  },
+  '0': {
+    to: [{ key_code: 'left_arrow', modifiers: ['command'] }],
+    description: 'Move to the beginning of the line',
+  },
+  // Shift + 6 = ^
+  '6': {
+    modifiers: {
+      mandatory: ['shift'],
+    },
+    to: [{ key_code: 'left_arrow', modifiers: ['command'] }],
+    description: 'Move to the beginning of the line',
+  },
+  // Shift + 4 = $
+  '4': {
+    modifiers: {
+      mandatory: ['shift'],
+    },
+    to: [{ key_code: 'right_arrow', modifiers: ['command'] }],
+    description: 'Move to the end of the line',
+  },
+}
+
 export const vimModeRules: KarabinerRules[] = [
   {
     description: 'Vim Mode Toggling',
@@ -64,54 +122,31 @@ export const vimModeRules: KarabinerRules[] = [
           key_code: 'caps_lock',
           modifiers: {
             mandatory: ['right_shift'],
-          }
+          },
         },
-        conditions: [
-          notInAppWithNativeVim,
-          isVimModeNotActive,
-        ],
-        to: [
-          activateVimMode,
-          notifyAboutNormalMode,
-        ],
+        conditions: [notInAppWithNativeVim, isVimModeNotActive],
+        to: [activateVimMode, notifyAboutNormalMode],
       },
       {
         description: 'Escape -> Exit Vim Mode',
         type: 'basic',
-        conditions: [
-          isVimModeActive,
-        ],
+        conditions: [isVimModeActive],
         from: { key_code: 'escape' },
-        to: [
-          deactivateVimMode,
-          notifyAboutInsertMode,
-        ],
+        to: [deactivateVimMode, notifyAboutInsertMode],
       },
       {
         description: 'Caps lock -> Exit Vim Mode',
         type: 'basic',
-        conditions: [
-          notInAppWithNativeVim,
-          isVimModeActive,
-        ],
+        conditions: [notInAppWithNativeVim, isVimModeActive],
         from: { key_code: 'caps_lock' },
-        to: [
-          deactivateVimMode,
-          notifyAboutInsertMode,
-        ],
+        to: [deactivateVimMode, notifyAboutInsertMode],
       },
       {
         description: 'Exit Vim Mode in Native Vim Apps',
         type: 'basic',
-        conditions: [
-          isInAppWithNativeVim,
-          isVimModeActive,
-        ],
+        conditions: [isInAppWithNativeVim, isVimModeActive],
         from: { any: 'key_code' },
-        to: [
-          deactivateVimMode,
-          notifyAboutInsertMode,
-        ],
+        to: [deactivateVimMode, notifyAboutInsertMode],
       },
       // TODO check this and then maybe add it
       // {
@@ -138,6 +173,19 @@ export const vimModeRules: KarabinerRules[] = [
       //     },
       //   ],
       // },
-    ]
-  }
+    ],
+  },
+  {
+    description: 'Vim Mode - Normal Mode',
+    manipulators: Object.entries(normalModeRules).map(([key, value]) => ({
+      type: 'basic',
+      description: value.description ?? `Vim Normal Mode - ${key}`,
+      from: {
+        key_code: key as KeyCode,
+        modifiers: value.modifiers,
+      },
+      conditions: [isVimModeActive, notInAppWithNativeVim],
+      to: value.to,
+    })),
+  },
 ]
