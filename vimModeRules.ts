@@ -1,4 +1,4 @@
-import { KarabinerRules } from './types'
+import { Condition, KarabinerRules, To } from './types'
 
 export const vimModeVariableName = 'vim_mode'
 const bundlesWithNativeVim = [
@@ -8,9 +8,49 @@ const bundlesWithNativeVim = [
   'com.microsoft.VSCode',
 ]
 
+const notInAppWithNativeVim: Condition = {
+  type: 'frontmost_application_unless',
+  bundle_identifiers: bundlesWithNativeVim,
+}
+
+const isVimModeActive: Condition = {
+  type: 'variable_if',
+  name: vimModeVariableName,
+  value: 1,
+}
+
+const isVimModeNotActive: Condition = {
+  ...isVimModeActive,
+  type: 'variable_unless',
+}
+
+const activateVimMode: To = {
+  set_variable: {
+    name: vimModeVariableName,
+    value: 1,
+  },
+}
+
+const deactivateVimMode: To = {
+  set_variable: {
+    name: vimModeVariableName,
+    value: 0,
+  },
+}
+
+const notifyAboutNormalMode: To = {
+  shell_command:
+    'osascript -e \'display notification "Press [i] to leave" with title "-- NORMAL --"\'',
+}
+
+const notifyAboutInsertMode: To = {
+  shell_command:
+    'osascript -e \'display notification with title "-- INSERT --"\'',
+}
+
 export const vimModeRules: KarabinerRules[] = [
   {
-    description: 'Vim Mode',
+    description: 'Vim Mode Toggling',
     manipulators: [
       {
         type: 'basic',
@@ -22,104 +62,50 @@ export const vimModeRules: KarabinerRules[] = [
           }
         },
         conditions: [
-          {
-            type: 'frontmost_application_unless',
-            bundle_identifiers: bundlesWithNativeVim,
-          },
-          {
-            type: 'variable_unless',
-            name: vimModeVariableName,
-            value: 1,
-          },
+          notInAppWithNativeVim,
+          isVimModeNotActive,
         ],
         to: [
-          {
-            set_variable: {
-              name: vimModeVariableName,
-              value: 1,
-            },
-          },
-          {
-            halt: true,
-            shell_command:
-              'osascript -e \'display notification "Press [i] to leave" with title "-- NORMAL --"\'',
-          },
+          activateVimMode,
+          notifyAboutNormalMode,
         ],
       },
       {
         description: 'Escape -> Exit Vim Mode',
         type: 'basic',
         conditions: [
-          {
-            name: vimModeVariableName,
-            type: 'variable_if',
-            value: 1,
-          },
+          isVimModeActive,
         ],
         from: { key_code: 'escape' },
         to: [
-          {
-            set_variable: {
-              name: vimModeVariableName,
-              value: 0,
-            },
-          },
-          {
-            shell_command:
-              'osascript -e \'display notification with title "-- INSERT --"\'',
-          },
+          deactivateVimMode,
+          notifyAboutInsertMode,
         ],
       },
       {
         description: 'Caps lock -> Exit Vim Mode',
         type: 'basic',
         conditions: [
-          {
-            name: vimModeVariableName,
-            type: 'variable_if',
-            value: 1,
-          },
+          notInAppWithNativeVim,
+          isVimModeActive,
         ],
         from: { key_code: 'caps_lock' },
         to: [
-          {
-            set_variable: {
-              name: vimModeVariableName,
-              value: 0,
-            },
-          },
-          {
-            shell_command:
-              'osascript -e \'display notification with title "-- INSERT --"\'',
-          },
+          deactivateVimMode,
+          notifyAboutInsertMode,
         ],
       },
       {
         description: 'Exit Vim Mode in Native Vim Apps',
         type: 'basic',
         conditions: [
-          {
-            type: 'frontmost_application_if',
-            bundle_identifiers: bundlesWithNativeVim,
-          },
-          {
-            name: vimModeVariableName,
-            type: 'variable_if',
-            value: 1,
-          },
+          notInAppWithNativeVim,
+          isVimModeActive,
         ],
         from: { any: 'key_code' },
         to: [
-          {
-            set_variable: {
-              name: vimModeVariableName,
-              value: 0,
-            },
-          },
-          {
-            shell_command:
-              'osascript -e \'display notification with title "-- INSERT --"\'',
-          },
+          deactivateVimMode,
+          notifyAboutInsertMode,
         ],
       },
       // TODO check this and then maybe add it

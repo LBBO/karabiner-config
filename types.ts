@@ -11,14 +11,14 @@ export interface Manipulator {
   to_after_key_up?: To[]
   to_if_alone?: To[]
   parameters?: Parameters
-  conditions?: Conditions[]
+  conditions?: Condition[]
 }
 
 export interface Parameters {
   'basic.simultaneous_threshold_milliseconds'?: number
 }
 
-type Conditions =
+export type Condition =
   | FrontMostApplicationCondition
   | DeviceCondition
   | KeybaordTypeCondition
@@ -26,7 +26,7 @@ type Conditions =
   | VaribaleCondition
   | EventChangedCondition
 
-type FrontMostApplicationCondition = {
+export type FrontMostApplicationCondition = {
   type: 'frontmost_application_if' | 'frontmost_application_unless'
   bundle_identifiers?: string[]
   file_paths?: string[]
@@ -149,6 +149,9 @@ export interface To {
   select_input_source?: {
     language: string
   }
+  /**
+   * to.halt is specified in to_if_alone or to_if_held_down and is used to cancel subsequent actions like to_after_key_up or to_delayed_action.
+   */
   halt?: boolean
 }
 
