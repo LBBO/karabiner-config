@@ -1,6 +1,7 @@
 export const VariableNames = {
   Vim: {
-    Mode: 'vim_mode',
+    NormalMode: 'vim_mode',
+    VisualMode: 'vim_visual_mode',
     GPressed: 'g_pressed',
   },
 } as const
