@@ -10,6 +10,8 @@ import {
 } from './utils'
 import { workRules } from './workRules'
 import { privateRules } from './privateRules'
+import { vimModeRules } from './vimModeRules'
+import { hyperKeyRules } from './hyperKeyRules'
 
 const commonLayers: HyperKeyLayers = {
   // spacebar: deeplink(
@@ -244,58 +246,8 @@ const mergeSublayers = (
   }, {})
 
 const rules: KarabinerRules[] = [
-  // Define the Hyper key itself
-  {
-    description: 'Hyper Key (⌃⌥⇧⌘)',
-    manipulators: [
-      {
-        description: 'Caps Lock -> Hyper Key',
-        from: {
-          key_code: 'caps_lock',
-          modifiers: {
-            optional: ['any'],
-          },
-        },
-        to: [
-          {
-            set_variable: {
-              name: 'hyper',
-              value: 1,
-            },
-          },
-        ],
-        to_after_key_up: [
-          {
-            set_variable: {
-              name: 'hyper',
-              value: 0,
-            },
-          },
-        ],
-        to_if_alone: [
-          {
-            key_code: 'escape',
-          },
-        ],
-        type: 'basic',
-      },
-      // {
-      //   type: 'basic',
-      //   description: 'Disable CMD + Tab to force Hyper Key usage',
-      //   from: {
-      //     key_code: 'tab',
-      //     modifiers: {
-      //       mandatory: ['left_command'],
-      //     },
-      //   },
-      //   to: [
-      //     {
-      //       key_code: 'tab',
-      //     },
-      //   ],
-      // },
-    ],
-  },
+  ...hyperKeyRules,
+  ...vimModeRules,
   ...createHyperSubLayers({
     ...commonLayers,
     ...mergeSublayers(commonLayers, privateRules),

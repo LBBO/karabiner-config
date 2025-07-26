@@ -93,32 +93,36 @@ export interface SimultaneousOptions {
   detect_key_down_uninterruptedly?: boolean
 }
 
-type ModifiersKeys =
-  | 'caps_lock'
-  | 'left_command'
-  | 'left_control'
-  | 'left_option'
-  | 'left_shift'
-  | 'right_command'
-  | 'right_control'
-  | 'right_option'
-  | 'right_shift'
-  | 'fn'
-  | 'command'
-  | 'control'
-  | 'option'
-  | 'shift'
-  | 'left_alt'
-  | 'left_gui'
-  | 'right_alt'
-  | 'right_gui'
-  | 'any'
+export const modifiersKeys = [
+  'caps_lock',
+  'left_command',
+  'left_control',
+  'left_option',
+  'left_shift',
+  'right_command',
+  'right_control',
+  'right_option',
+  'right_shift',
+  'fn',
+  'command',
+  'control',
+  'option',
+  'shift',
+  'left_alt',
+  'left_gui',
+  'right_alt',
+  'right_gui',
+  'any',
+]
+
+export type ModifiersKeys = typeof modifiersKeys[number]
 
 export interface From {
+  any?: 'pointing_button' | 'key_code' | 'consumer_key_code'
   key_code?: KeyCode
+  modifiers?: Modifiers
   simultaneous?: SimultaneousFrom[]
   simultaneous_options?: SimultaneousOptions
-  modifiers?: Modifiers
 }
 
 export interface Modifiers {
@@ -145,6 +149,7 @@ export interface To {
   select_input_source?: {
     language: string
   }
+  halt?: boolean
 }
 
 export interface MouseKey {
