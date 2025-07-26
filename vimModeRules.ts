@@ -506,6 +506,49 @@ const enteringAndLeavingChangeModeRules: Manipulator[] = [
   ),
 ]
 
+const notDisabledModifiers: KeyCode[] = [
+  'left_shift',
+  'right_shift',
+  'left_control',
+  'right_control',
+  'left_option',
+  'right_option',
+  'left_command',
+  'right_command',
+  'left_arrow',
+  'right_arrow',
+  'up_arrow',
+  'down_arrow',
+]
+const disableUnusedKeysRules = [
+  VariableNames.Vim.NormalMode,
+  VariableNames.Vim.VisualMode,
+  VariableNames.Vim.DeleteMode,
+  VariableNames.Vim.YankMode,
+  VariableNames.Vim.ChangeMode,
+].flatMap((mode) => [
+  ...notDisabledModifiers.map(
+    (key_code): Manipulator => ({
+      type: 'basic',
+      description: `Disable ${key_code} in ${mode}`,
+      from: { key_code, modifiers: { optional: ['any'] } },
+      conditions: [isActive(mode), notInAppWithNativeVim],
+      to: [{ key_code }],
+    }),
+  ),
+  {
+    type: 'basic',
+    from: {
+      any: 'key_code',
+      modifiers: {
+        optional: ['any'],
+      },
+    },
+    conditions: [isActive(mode), notInAppWithNativeVim],
+    to: [{ key_code: 'vk_none' }],
+  },
+])
+
 export const vimModeRules: KarabinerRules[] = [
   {
     description: 'Vim Mode Toggling',
@@ -591,7 +634,6 @@ export const vimModeRules: KarabinerRules[] = [
       ...enteringAndLeavingVisualModeRules,
       ...makeVimVisualModeRules(vimMotions),
       ...makeVimVisualModeRules(visualModeActions, false),
-      // TODO: disable remaining keys in Visual Mode
     ],
   },
   {
@@ -659,6 +701,10 @@ export const vimModeRules: KarabinerRules[] = [
   {
     description: 'Vim - Normal Mode - Entering Insert Mode (9/11)',
     manipulators: makeVimNormalModeRules(enterInsertFromNormalRules),
+  },
+  {
+    description: 'Vim - Disable unused keys (11/11)',
+    manipulators: disableUnusedKeysRules,
   },
 ]
 
