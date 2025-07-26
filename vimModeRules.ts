@@ -166,6 +166,67 @@ const normalModeRules: VimModeLayerRules = {
       to: [{ key_code: 'down_arrow', modifiers: ['command'] }],
     },
   ],
+
+  i: [
+    {
+      to: [deactivateVimMode, notifyAboutInsertMode],
+      description: 'Enter Insert Mode',
+    },
+    {
+      // TODO why doesn't this work?
+      modifiers: {
+        mandatory: ['shift'],
+      },
+      to: [
+        { key_code: 'left_arrow', modifiers: ['command'] },
+        deactivateVimMode,
+        notifyAboutInsertMode,
+      ],
+    },
+  ],
+
+  a: [
+    {
+      to: [deactivateVimMode, notifyAboutInsertMode],
+      description: 'Enter Insert Mode after the cursor',
+    },
+    {
+      // TODO why doesn't this work?
+      modifiers: {
+        mandatory: ['shift'],
+      },
+      to: [
+        { key_code: 'right_arrow', modifiers: ['command'] },
+        deactivateVimMode,
+        notifyAboutInsertMode,
+      ],
+    },
+  ],
+
+  o: [
+    {
+      to: [
+        { key_code: 'right_arrow', modifiers: ['command'] },
+        { key_code: 'return_or_enter' },
+        deactivateVimMode,
+        notifyAboutInsertMode,
+      ],
+      description: 'Open a new line below and enter Insert Mode',
+    },
+    {
+      // TODO why doesn't this work?
+      modifiers: {
+        mandatory: ['shift'],
+      },
+      to: [
+        { key_code: 'left_arrow', modifiers: ['command'] },
+        { key_code: 'return_or_enter' },
+        { key_code: 'up_arrow' },
+        deactivateVimMode,
+        notifyAboutInsertMode,
+      ],
+    },
+  ],
 }
 
 export const vimModeRules: KarabinerRules[] = [
