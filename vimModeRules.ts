@@ -1,11 +1,11 @@
 import { KarabinerRules } from './types'
 
-const vimModeVariableName = 'vim_mode'
+export const vimModeVariableName = 'vim_mode'
 const bundlesWithNativeVim = [
   'com.jetbrains.webstorm',
   'com.jetbrains.pycharm',
   'com.jetbrains.idea',
-  'com.visualstudio.code.oss',
+  'com.microsoft.VSCode',
 ]
 
 export const vimModeRules: KarabinerRules[] = [
@@ -51,7 +51,7 @@ export const vimModeRules: KarabinerRules[] = [
         type: 'basic',
         conditions: [
           {
-            name: 'vim_mode',
+            name: vimModeVariableName,
             type: 'variable_if',
             value: 1,
           },
@@ -60,7 +60,31 @@ export const vimModeRules: KarabinerRules[] = [
         to: [
           {
             set_variable: {
-              name: 'vim_mode',
+              name: vimModeVariableName,
+              value: 0,
+            },
+          },
+          {
+            shell_command:
+              'osascript -e \'display notification with title "-- INSERT --"\'',
+          },
+        ],
+      },
+      {
+        description: 'Caps lock -> Exit Vim Mode',
+        type: 'basic',
+        conditions: [
+          {
+            name: vimModeVariableName,
+            type: 'variable_if',
+            value: 1,
+          },
+        ],
+        from: { key_code: 'caps_lock' },
+        to: [
+          {
+            set_variable: {
+              name: vimModeVariableName,
               value: 0,
             },
           },
@@ -79,7 +103,7 @@ export const vimModeRules: KarabinerRules[] = [
             bundle_identifiers: bundlesWithNativeVim,
           },
           {
-            name: 'vim_mode',
+            name: vimModeVariableName,
             type: 'variable_if',
             value: 1,
           },
@@ -88,7 +112,7 @@ export const vimModeRules: KarabinerRules[] = [
         to: [
           {
             set_variable: {
-              name: 'vim_mode',
+              name: vimModeVariableName,
               value: 0,
             },
           },
@@ -104,7 +128,7 @@ export const vimModeRules: KarabinerRules[] = [
       //   type: 'basic',
       //   conditions: [
       //     {
-      //       name: 'vim_mode',
+      //       name: vimModeVariableName,
       //       type: 'variable_if',
       //       value: 1,
       //     },
@@ -113,7 +137,7 @@ export const vimModeRules: KarabinerRules[] = [
       //   to: [
       //     {
       //       set_variable: {
-      //         name: 'vim_mode',
+      //         name: vimModeVariableName,
       //         value: 0,
       //       },
       //     },

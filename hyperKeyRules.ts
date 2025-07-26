@@ -1,4 +1,5 @@
 import { KarabinerRules, Manipulator, modifiersKeys } from './types'
+import { vimModeVariableName } from './vimModeRules'
 
 const capsLockToHyperKey: Manipulator = {
   description: 'Caps Lock without right shift -> Hyper Key',
@@ -8,6 +9,13 @@ const capsLockToHyperKey: Manipulator = {
       optional: modifiersKeys.filter(key => key !== 'any' && key !== 'right_shift' && key !== 'shift'),
     },
   },
+  conditions: [
+    {
+      type: 'variable_unless',
+      name: vimModeVariableName,
+      value: 1,
+    }
+  ],
   to: [
     {
       set_variable: {
