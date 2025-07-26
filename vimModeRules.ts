@@ -180,6 +180,46 @@ const vimMotions: VimModeLayerRules = {
   ],
 }
 
+const normalModeActions: VimModeLayerRules = {
+  x: [
+    {
+      to: [{ key_code: 'delete_forward' }],
+      description: 'Delete character after the cursor',
+    },
+    {
+      modifiers: {
+        mandatory: ['shift'],
+      },
+      to: [{ key_code: 'delete_or_backspace' }],
+      description: 'Delete character before the cursor',
+    },
+  ],
+  p: [
+    {
+      description: 'Paste',
+      to: [{ key_code: 'v', modifiers: ['left_command'] }],
+    },
+    {
+      description: 'Paste',
+      modifiers: {
+        mandatory: ['shift'],
+      },
+      to: [{ key_code: 'v', modifiers: ['left_command'] }],
+    },
+  ],
+  u: {
+    description: 'Undo',
+    to: [{ key_code: 'z', modifiers: ['left_command'] }],
+  },
+  r: {
+    description: 'Redo',
+    modifiers: {
+      mandatory: ['control'],
+    },
+    to: [{ key_code: 'z', modifiers: ['left_command', 'left_shift'] }],
+  },
+}
+
 const enterInsertFromNormalRules: VimModeLayerRules = {
   i: [
     {
@@ -607,6 +647,10 @@ export const vimModeRules: KarabinerRules[] = [
         g: (vimMotions.g as KeyRuleDefinition[]).slice(1),
       }),
     ],
+  },
+  {
+    description: 'Vim - Normal Mode - Actions (7/11)',
+    manipulators: makeVimNormalModeRules(normalModeActions),
   },
   {
     description: 'Vim - Normal Mode - Motions (8/11)',
