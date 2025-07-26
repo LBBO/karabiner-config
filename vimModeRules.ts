@@ -101,6 +101,10 @@ const normalModeRules: VimModeLayerRules = {
     to: [{ key_code: 'right_arrow' }],
   },
   w: {
+    // Shift isn't properly implementable, but allowing it is better than nothing
+    modifiers: {
+      optional: ['shift'],
+    },
     to: [
       { key_code: 'right_arrow', modifiers: ['option'] },
       { key_code: 'right_arrow', modifiers: ['option'] },
@@ -109,10 +113,18 @@ const normalModeRules: VimModeLayerRules = {
     description: 'Move to the next word',
   },
   b: {
+    // Shift isn't properly implementable, but allowing it is better than nothing
+    modifiers: {
+      optional: ['shift'],
+    },
     to: [{ key_code: 'left_arrow', modifiers: ['option'] }],
     description: 'Move to the previous word',
   },
   e: {
+    // Shift isn't properly implementable, but allowing it is better than nothing
+    modifiers: {
+      optional: ['shift'],
+    },
     to: [{ key_code: 'right_arrow', modifiers: ['option'] }],
     description: 'Move to the end of the word',
   },
@@ -158,7 +170,6 @@ const normalModeRules: VimModeLayerRules = {
       ],
     },
     {
-      // TODO why doesn't this work?
       description: 'G -> go to bottom',
       modifiers: {
         mandatory: ['shift'],
@@ -173,7 +184,6 @@ const normalModeRules: VimModeLayerRules = {
       description: 'Enter Insert Mode',
     },
     {
-      // TODO why doesn't this work?
       modifiers: {
         mandatory: ['shift'],
       },
@@ -191,7 +201,6 @@ const normalModeRules: VimModeLayerRules = {
       description: 'Enter Insert Mode after the cursor',
     },
     {
-      // TODO why doesn't this work?
       modifiers: {
         mandatory: ['shift'],
       },
@@ -214,7 +223,6 @@ const normalModeRules: VimModeLayerRules = {
       description: 'Open a new line below and enter Insert Mode',
     },
     {
-      // TODO why doesn't this work?
       modifiers: {
         mandatory: ['shift'],
       },
@@ -302,13 +310,13 @@ export const vimModeRules: KarabinerRules[] = [
           ? value.map((currValue) => [keyCode, currValue])
           : [[keyCode, value]]
       })
-      .map(([key, value]) => ({
+      .map(([key, { modifiers, ...value }]) => ({
         ...value,
         type: 'basic',
         description: value.description ?? `Vim Normal Mode - ${key}`,
         from: {
           key_code: key,
-          modifiers: value.modifiers,
+          modifiers: modifiers,
         },
         conditions: [
           isVimModeActive,
