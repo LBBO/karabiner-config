@@ -330,6 +330,22 @@ const enteringAndLeavingDeleteModeRules: Manipulator[] = [
       deactivate(VariableNames.Vim.NormalMode),
     ],
   },
+  {
+    type: 'basic',
+    description: 'Delete selected text in Delete Mode',
+    from: { key_code: 'd' },
+    conditions: [isActive(VariableNames.Vim.DeleteMode), notInAppWithNativeVim],
+    to: [
+      { key_code: 'left_arrow', modifiers: ['left_command'] },
+      {
+        key_code: 'right_arrow',
+        modifiers: ['left_command', 'left_shift'],
+      },
+      { key_code: 'x', modifiers: ['left_command'] },
+      deactivate(VariableNames.Vim.DeleteMode),
+      activate(VariableNames.Vim.NormalMode),
+    ],
+  },
   ...(['escape', 'caps_lock'] as const).map(
     (key_code): Manipulator => ({
       type: 'basic',
@@ -343,6 +359,107 @@ const enteringAndLeavingDeleteModeRules: Manipulator[] = [
       to: [
         activate(VariableNames.Vim.NormalMode),
         deactivate(VariableNames.Vim.DeleteMode),
+        notifyAboutNormalMode,
+      ],
+    }),
+  ),
+]
+
+const enteringAndLeavingYankModeRules: Manipulator[] = [
+  {
+    type: 'basic',
+    description: 'Start yanking',
+    from: { key_code: 'y' },
+    conditions: [
+      isActive(VariableNames.Vim.NormalMode),
+      isNotActive(VariableNames.Vim.YankMode),
+      notInAppWithNativeVim,
+    ],
+    to: [
+      activate(VariableNames.Vim.YankMode),
+      deactivate(VariableNames.Vim.NormalMode),
+    ],
+  },
+  {
+    type: 'basic',
+    description: 'Yank entire line',
+    from: { key_code: 'y' },
+    conditions: [isActive(VariableNames.Vim.YankMode), notInAppWithNativeVim],
+    to: [
+      { key_code: 'left_arrow', modifiers: ['left_command'] },
+      {
+        key_code: 'right_arrow',
+        modifiers: ['left_command', 'left_shift'],
+      },
+      { key_code: 'c', modifiers: ['left_command'] },
+      { key_code: 'left_arrow', modifiers: ['left_command'] },
+      deactivate(VariableNames.Vim.YankMode),
+      activate(VariableNames.Vim.NormalMode),
+    ],
+  },
+  ...(['escape', 'caps_lock'] as const).map(
+    (key_code): Manipulator => ({
+      type: 'basic',
+      description: `Stop yanking (${key_code})`,
+      from: { key_code },
+      conditions: [
+        isActive(VariableNames.Vim.YankMode),
+        isNotActive(VariableNames.Vim.NormalMode),
+        notInAppWithNativeVim,
+      ],
+      to: [
+        activate(VariableNames.Vim.NormalMode),
+        deactivate(VariableNames.Vim.YankMode),
+        notifyAboutNormalMode,
+      ],
+    }),
+  ),
+]
+
+const enteringAndLeavingChangeModeRules: Manipulator[] = [
+  {
+    type: 'basic',
+    description: 'Start changing',
+    from: { key_code: 'c' },
+    conditions: [
+      isActive(VariableNames.Vim.NormalMode),
+      isNotActive(VariableNames.Vim.ChangeMode),
+      notInAppWithNativeVim,
+    ],
+    to: [
+      activate(VariableNames.Vim.ChangeMode),
+      deactivate(VariableNames.Vim.NormalMode),
+    ],
+  },
+  {
+    type: 'basic',
+    description: 'Change entire line',
+    from: { key_code: 'c' },
+    conditions: [isActive(VariableNames.Vim.ChangeMode), notInAppWithNativeVim],
+    to: [
+      { key_code: 'left_arrow', modifiers: ['left_command'] },
+      {
+        key_code: 'right_arrow',
+        modifiers: ['left_command', 'left_shift'],
+      },
+      { key_code: 'x', modifiers: ['left_command'] },
+      deactivate(VariableNames.Vim.ChangeMode),
+      activate(VariableNames.Vim.NormalMode),
+    ],
+  },
+  ...(['escape', 'caps_lock'] as const).map(
+    (key_code): Manipulator => ({
+      type: 'basic',
+      description: `Stop changing (${key_code})`,
+      from: { key_code },
+      conditions: [
+        isActive(VariableNames.Vim.ChangeMode),
+        isNotActive(VariableNames.Vim.NormalMode),
+        notInAppWithNativeVim,
+      ],
+      to: [
+        activate(VariableNames.Vim.NormalMode),
+        deactivate(VariableNames.Vim.ChangeMode),
         notifyAboutNormalMode,
       ],
     }),
@@ -441,25 +558,6 @@ export const vimModeRules: KarabinerRules[] = [
     description: 'Vim - Visual Mode - Deleting in Normal Mode (4/11)',
     manipulators: [
       ...enteringAndLeavingDeleteModeRules,
-      {
-        type: 'basic',
-        description: 'Delete selected text in Delete Mode',
-        from: { key_code: 'd' },
-        conditions: [
-          isActive(VariableNames.Vim.DeleteMode),
-          notInAppWithNativeVim,
-        ],
-        to: [
-          { key_code: 'left_arrow', modifiers: ['left_command'] },
-          {
-            key_code: 'right_arrow',
-            modifiers: ['left_command', 'left_shift'],
-          },
-          { key_code: 'x', modifiers: ['left_command'] },
-          deactivate(VariableNames.Vim.DeleteMode),
-          activate(VariableNames.Vim.NormalMode),
-        ],
-      },
       ...makeVimDeleteModeRules(
         {
           // Don't delete after the first g press
@@ -468,6 +566,42 @@ export const vimModeRules: KarabinerRules[] = [
         false,
       ),
       ...makeVimDeleteModeRules({
+        ...vimMotions,
+        // Skip the first g press
+        g: (vimMotions.g as KeyRuleDefinition[]).slice(1),
+      }),
+    ],
+  },
+  {
+    description: 'Vim - Visual Mode - Yanking in Normal Mode (5/11)',
+    manipulators: [
+      ...enteringAndLeavingYankModeRules,
+      ...makeVimYankModeRules(
+        {
+          // Don't delete after the first g press
+          g: (vimMotions.g as KeyRuleDefinition[])[0],
+        },
+        false,
+      ),
+      ...makeVimYankModeRules({
+        ...vimMotions,
+        // Skip the first g press
+        g: (vimMotions.g as KeyRuleDefinition[]).slice(1),
+      }),
+    ],
+  },
+  {
+    description: 'Vim - Visual Mode - Changing in Normal Mode (6/11)',
+    manipulators: [
+      ...enteringAndLeavingChangeModeRules,
+      ...makeVimChangeModeRules(
+        {
+          // Don't delete after the first g press
+          g: (vimMotions.g as KeyRuleDefinition[])[0],
+        },
+        false,
+      ),
+      ...makeVimChangeModeRules({
         ...vimMotions,
         // Skip the first g press
         g: (vimMotions.g as KeyRuleDefinition[]).slice(1),
@@ -549,6 +683,60 @@ function makeVimDeleteModeRules(
     ],
     conditions: [
       isActive(VariableNames.Vim.DeleteMode),
+      ...(manipulator.conditions ?? []),
+    ],
+  }))
+}
+
+function makeVimYankModeRules(
+  rules: VimModeLayerRules,
+  yankAfterward = true,
+): Manipulator[] {
+  return makeVimModeManipulators(rules).map((manipulator) => ({
+    ...manipulator,
+    to: [
+      ...(manipulator.to?.map((to) => ({
+        ...to,
+        modifiers: ['left_shift', ...(to.modifiers ?? [])],
+      })) ?? []),
+      ...(yankAfterward
+        ? [
+            { key_code: 'c', modifiers: ['left_command'] } as To,
+            { key_code: 'left_arrow' } as To,
+            deactivate(VariableNames.Vim.YankMode),
+            activate(VariableNames.Vim.NormalMode),
+          ]
+        : []),
+    ],
+    conditions: [
+      isActive(VariableNames.Vim.YankMode),
+      ...(manipulator.conditions ?? []),
+    ],
+  }))
+}
+
+function makeVimChangeModeRules(
+  rules: VimModeLayerRules,
+  changeAfterward = true,
+): Manipulator[] {
+  return makeVimModeManipulators(rules).map((manipulator) => ({
+    ...manipulator,
+    to: [
+      ...(manipulator.to?.map((to) => ({
+        ...to,
+        modifiers: ['left_shift', ...(to.modifiers ?? [])],
+      })) ?? []),
+      ...(changeAfterward
+        ? [
+            { key_code: 'x', modifiers: ['left_command'] } as To,
+            deactivate(VariableNames.Vim.ChangeMode),
+            deactivate(VariableNames.Vim.NormalMode),
+            notifyAboutInsertMode,
+          ]
+        : []),
+    ],
+    conditions: [
+      isActive(VariableNames.Vim.ChangeMode),
       ...(manipulator.conditions ?? []),
     ],
   }))
