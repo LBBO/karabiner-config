@@ -1,6 +1,14 @@
-import { Condition, KarabinerRules, KeyCode, Modifiers, To } from './types'
+import {
+  Condition,
+  KarabinerRules,
+  KeyCode,
+  Manipulator,
+  Modifiers,
+  To,
+} from './types'
+import { VariableNames } from './variableNames'
 
-export const vimModeVariableName = 'vim_mode'
+export const vimModeVariableName = VariableNames.Vim.Mode
 const bundlesWithNativeVim = [
   'com.jetbrains.webstorm',
   'com.jetbrains.pycharm',
@@ -9,6 +17,32 @@ const bundlesWithNativeVim = [
   'com.mitchellh.ghostty',
   'md.obsidian',
 ]
+
+const deactivate = (name): To => ({
+  set_variable: {
+    name,
+    value: 0,
+  },
+})
+
+const activate = (name): To => ({
+  set_variable: {
+    name,
+    value: 1,
+  },
+})
+
+const isActive = (name: string): Condition => ({
+  type: 'variable_if',
+  name,
+  value: 1,
+})
+
+const isNotActive = (name: string): Condition => ({
+  type: 'variable_unless',
+  name,
+  value: 1,
+})
 
 const isInAppWithNativeVim: Condition = {
   type: 'frontmost_application_if',
@@ -31,19 +65,9 @@ const isVimModeNotActive: Condition = {
   type: 'variable_unless',
 }
 
-const activateVimMode: To = {
-  set_variable: {
-    name: vimModeVariableName,
-    value: 1,
-  },
-}
+const activateVimMode = activate(VariableNames.Vim.Mode)
 
-const deactivateVimMode: To = {
-  set_variable: {
-    name: vimModeVariableName,
-    value: 0,
-  },
-}
+const deactivateVimMode = deactivate(VariableNames.Vim.Mode)
 
 const notifyAboutNormalMode: To = {
   shell_command:
@@ -55,8 +79,12 @@ const notifyAboutInsertMode: To = {
     'osascript -e \'display notification with title "-- INSERT --"\'',
 }
 
+type KeyRuleDefinition = Omit<Manipulator, 'from' | 'type'> & {
+  modifiers?: Modifiers
+}
+
 type VimModeLayerRules = Partial<
-  Record<KeyCode, { to: To[]; description?: string; modifiers?: Modifiers }>
+  Record<KeyCode, KeyRuleDefinition | KeyRuleDefinition[]>
 >
 
 const normalModeRules: VimModeLayerRules = {
@@ -73,7 +101,11 @@ const normalModeRules: VimModeLayerRules = {
     to: [{ key_code: 'right_arrow' }],
   },
   w: {
-    to: [{ key_code: 'right_arrow', modifiers: ['option'] }],
+    to: [
+      { key_code: 'right_arrow', modifiers: ['option'] },
+      { key_code: 'right_arrow', modifiers: ['option'] },
+      { key_code: 'left_arrow', modifiers: ['option'] },
+    ],
     description: 'Move to the next word',
   },
   b: {
@@ -104,6 +136,36 @@ const normalModeRules: VimModeLayerRules = {
     to: [{ key_code: 'right_arrow', modifiers: ['command'] }],
     description: 'Move to the end of the line',
   },
+
+  g: [
+    {
+      description: 'Remember first g press',
+      conditions: [isNotActive(VariableNames.Vim.GPressed)],
+      to: [activate(VariableNames.Vim.GPressed)],
+      to_delayed_action: {
+        to_if_invoked: [deactivate(VariableNames.Vim.GPressed)],
+      },
+      parameters: {
+        'basic.to_delayed_action_delay_milliseconds': 500,
+      },
+    },
+    {
+      description: 'Go to top on second g press',
+      conditions: [isActive(VariableNames.Vim.GPressed)],
+      to: [
+        { key_code: 'up_arrow', modifiers: ['command'] },
+        deactivate(VariableNames.Vim.GPressed),
+      ],
+    },
+    {
+      // TODO why doesn't this work?
+      description: 'G -> go to bottom',
+      modifiers: {
+        mandatory: ['shift'],
+      },
+      to: [{ key_code: 'down_arrow', modifiers: ['command'] }],
+    },
+  ],
 }
 
 export const vimModeRules: KarabinerRules[] = [
@@ -172,15 +234,26 @@ export const vimModeRules: KarabinerRules[] = [
   },
   {
     description: 'Vim Mode - Normal Mode',
-    manipulators: Object.entries(normalModeRules).map(([key, value]) => ({
-      type: 'basic',
-      description: value.description ?? `Vim Normal Mode - ${key}`,
-      from: {
-        key_code: key as KeyCode,
-        modifiers: value.modifiers,
-      },
-      conditions: [isVimModeActive, notInAppWithNativeVim],
-      to: value.to,
-    })),
+    manipulators: Object.entries(normalModeRules)
+      .flatMap(([key, value]): Array<[KeyCode, KeyRuleDefinition]> => {
+        const keyCode = key as KeyCode
+        return Array.isArray(value)
+          ? value.map((currValue) => [keyCode, currValue])
+          : [[keyCode, value]]
+      })
+      .map(([key, value]) => ({
+        ...value,
+        type: 'basic',
+        description: value.description ?? `Vim Normal Mode - ${key}`,
+        from: {
+          key_code: key,
+          modifiers: value.modifiers,
+        },
+        conditions: [
+          isVimModeActive,
+          notInAppWithNativeVim,
+          ...(value.conditions ?? []),
+        ],
+      })),
   },
 ]

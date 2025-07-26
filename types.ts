@@ -8,6 +8,10 @@ export interface Manipulator {
   type: 'basic'
   from: From
   to?: To[]
+  /**
+   * to_delayed_action posts events after 500 milliseconds from the from key is pressed.
+   */
+  to_delayed_action?: ToDelayedAction
   to_after_key_up?: To[]
   to_if_alone?: To[]
   parameters?: Parameters
@@ -16,6 +20,7 @@ export interface Manipulator {
 
 export interface Parameters {
   'basic.simultaneous_threshold_milliseconds'?: number
+  'basic.to_delayed_action_delay_milliseconds'?: number
 }
 
 export type Condition =
@@ -153,6 +158,20 @@ export interface To {
    * to.halt is specified in to_if_alone or to_if_held_down and is used to cancel subsequent actions like to_after_key_up or to_delayed_action.
    */
   halt?: boolean
+}
+
+/**
+ * to_delayed_action posts events after 500 milliseconds from the from key is pressed.
+ */
+export interface ToDelayedAction {
+  /**
+   * An array of to events that will be sent if no other key is pressed after the from key is pressed.
+   */
+  to_if_invoked?: To[]
+  /**
+   * An array of to events that will be sent if another key is pressed after the from key is pressed before to_delayed_action.to_if_invoked is sent.
+   */
+  to_if_canceled?: To[]
 }
 
 export interface MouseKey {
