@@ -256,51 +256,23 @@ const enteringAndLeavingVisualModeRules: Manipulator[] = [
       notifyAboutVisualMode,
     ],
   },
-  {
-    type: 'basic',
-    description: 'Visual Mode -> Normal Mode',
-    from: { key_code: 'v' },
-    conditions: [
-      isActive(VariableNames.Vim.VisualMode),
-      isNotActive(VariableNames.Vim.NormalMode),
-      notInAppWithNativeVim,
-    ],
-    to: [
-      activate(VariableNames.Vim.NormalMode),
-      deactivate(VariableNames.Vim.VisualMode),
-      notifyAboutNormalMode,
-    ],
-  },
-  {
-    type: 'basic',
-    description: 'Visual Mode -> Normal Mode',
-    from: { key_code: 'escape' },
-    conditions: [
-      isActive(VariableNames.Vim.VisualMode),
-      isNotActive(VariableNames.Vim.NormalMode),
-      notInAppWithNativeVim,
-    ],
-    to: [
-      activate(VariableNames.Vim.NormalMode),
-      deactivate(VariableNames.Vim.VisualMode),
-      notifyAboutNormalMode,
-    ],
-  },
-  {
-    type: 'basic',
-    description: 'Visual Mode -> Normal Mode',
-    from: { key_code: 'caps_lock' },
-    conditions: [
-      isActive(VariableNames.Vim.VisualMode),
-      isNotActive(VariableNames.Vim.NormalMode),
-      notInAppWithNativeVim,
-    ],
-    to: [
-      activate(VariableNames.Vim.NormalMode),
-      deactivate(VariableNames.Vim.VisualMode),
-      notifyAboutNormalMode,
-    ],
-  },
+  ...(['v', 'escape', 'caps_lock'] as const).map(
+    (key_code): Manipulator => ({
+      type: 'basic',
+      description: `Visual Mode -> Normal Mode (${key_code})`,
+      from: { key_code },
+      conditions: [
+        isActive(VariableNames.Vim.VisualMode),
+        isNotActive(VariableNames.Vim.NormalMode),
+        notInAppWithNativeVim,
+      ],
+      to: [
+        activate(VariableNames.Vim.NormalMode),
+        deactivate(VariableNames.Vim.VisualMode),
+        notifyAboutNormalMode,
+      ],
+    }),
+  ),
 ]
 
 const visualModeActions: VimModeLayerRules = {
@@ -343,6 +315,40 @@ const visualModeActions: VimModeLayerRules = {
   },
 }
 
+const enteringAndLeavingDeleteModeRules: Manipulator[] = [
+  {
+    type: 'basic',
+    description: 'Normal Mode -> Visual Mode',
+    from: { key_code: 'd' },
+    conditions: [
+      isActive(VariableNames.Vim.NormalMode),
+      isNotActive(VariableNames.Vim.DeleteMode),
+      notInAppWithNativeVim,
+    ],
+    to: [
+      activate(VariableNames.Vim.DeleteMode),
+      deactivate(VariableNames.Vim.NormalMode),
+    ],
+  },
+  ...(['escape', 'caps_lock'] as const).map(
+    (key_code): Manipulator => ({
+      type: 'basic',
+      description: `Visual Mode -> Normal Mode (${key_code})`,
+      from: { key_code },
+      conditions: [
+        isActive(VariableNames.Vim.VisualMode),
+        isNotActive(VariableNames.Vim.NormalMode),
+        notInAppWithNativeVim,
+      ],
+      to: [
+        activate(VariableNames.Vim.NormalMode),
+        deactivate(VariableNames.Vim.VisualMode),
+        notifyAboutNormalMode,
+      ],
+    }),
+  ),
+]
+
 export const vimModeRules: KarabinerRules[] = [
   {
     description: 'Vim Mode Toggling',
@@ -364,21 +370,36 @@ export const vimModeRules: KarabinerRules[] = [
         type: 'basic',
         conditions: [isVimModeActive],
         from: { key_code: 'escape' },
-        to: [deactivateVimMode, notifyAboutInsertMode],
+        to: [
+          deactivateVimMode,
+          notifyAboutInsertMode,
+          // Just in case this is still active
+          deactivate(VariableNames.Vim.GPressed),
+        ],
       },
       {
         description: 'Caps lock -> Exit Vim Mode',
         type: 'basic',
         conditions: [notInAppWithNativeVim, isVimModeActive],
         from: { key_code: 'caps_lock' },
-        to: [deactivateVimMode, notifyAboutInsertMode],
+        to: [
+          deactivateVimMode,
+          notifyAboutInsertMode,
+          // Just in case this is still active
+          deactivate(VariableNames.Vim.GPressed),
+        ],
       },
       {
         description: 'Exit Vim Mode in Native Vim Apps',
         type: 'basic',
         conditions: [isInAppWithNativeVim, isVimModeActive],
         from: { any: 'key_code' },
-        to: [deactivateVimMode, notifyAboutInsertMode],
+        to: [
+          deactivateVimMode,
+          notifyAboutInsertMode,
+          // Just in case this is still active
+          deactivate(VariableNames.Vim.GPressed),
+        ],
       },
       // TODO check this and then maybe add it
       // {
@@ -414,6 +435,43 @@ export const vimModeRules: KarabinerRules[] = [
       ...makeVimVisualModeRules(vimMotions),
       ...makeVimVisualModeRules(visualModeActions, false),
       // TODO: disable remaining keys in Visual Mode
+    ],
+  },
+  {
+    description: 'Vim - Visual Mode - Deleting in Normal Mode (4/11)',
+    manipulators: [
+      ...enteringAndLeavingDeleteModeRules,
+      {
+        type: 'basic',
+        description: 'Delete selected text in Delete Mode',
+        from: { key_code: 'd' },
+        conditions: [
+          isActive(VariableNames.Vim.DeleteMode),
+          notInAppWithNativeVim,
+        ],
+        to: [
+          { key_code: 'left_arrow', modifiers: ['left_command'] },
+          {
+            key_code: 'right_arrow',
+            modifiers: ['left_command', 'left_shift'],
+          },
+          { key_code: 'x', modifiers: ['left_command'] },
+          deactivate(VariableNames.Vim.DeleteMode),
+          activate(VariableNames.Vim.NormalMode),
+        ],
+      },
+      ...makeVimDeleteModeRules(
+        {
+          // Don't delete after the first g press
+          g: (vimMotions.g as KeyRuleDefinition[])[0],
+        },
+        false,
+      ),
+      ...makeVimDeleteModeRules({
+        ...vimMotions,
+        // Skip the first g press
+        g: (vimMotions.g as KeyRuleDefinition[]).slice(1),
+      }),
     ],
   },
   {
@@ -465,6 +523,32 @@ function makeVimVisualModeRules(
     })),
     conditions: [
       isActive(VariableNames.Vim.VisualMode),
+      ...(manipulator.conditions ?? []),
+    ],
+  }))
+}
+
+function makeVimDeleteModeRules(
+  rules: VimModeLayerRules,
+  deleteAfterward = true,
+): Manipulator[] {
+  return makeVimModeManipulators(rules).map((manipulator) => ({
+    ...manipulator,
+    to: [
+      ...(manipulator.to?.map((to) => ({
+        ...to,
+        modifiers: ['left_shift', ...(to.modifiers ?? [])],
+      })) ?? []),
+      ...(deleteAfterward
+        ? [
+            { key_code: 'x', modifiers: ['left_command'] } as To,
+            deactivate(VariableNames.Vim.DeleteMode),
+            activate(VariableNames.Vim.NormalMode),
+          ]
+        : []),
+    ],
+    conditions: [
+      isActive(VariableNames.Vim.DeleteMode),
       ...(manipulator.conditions ?? []),
     ],
   }))
