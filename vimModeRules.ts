@@ -318,7 +318,7 @@ const visualModeActions: VimModeLayerRules = {
 const enteringAndLeavingDeleteModeRules: Manipulator[] = [
   {
     type: 'basic',
-    description: 'Normal Mode -> Visual Mode',
+    description: 'Start deleting',
     from: { key_code: 'd' },
     conditions: [
       isActive(VariableNames.Vim.NormalMode),
@@ -333,16 +333,16 @@ const enteringAndLeavingDeleteModeRules: Manipulator[] = [
   ...(['escape', 'caps_lock'] as const).map(
     (key_code): Manipulator => ({
       type: 'basic',
-      description: `Visual Mode -> Normal Mode (${key_code})`,
+      description: `Stop deleting (${key_code})`,
       from: { key_code },
       conditions: [
-        isActive(VariableNames.Vim.VisualMode),
+        isActive(VariableNames.Vim.DeleteMode),
         isNotActive(VariableNames.Vim.NormalMode),
         notInAppWithNativeVim,
       ],
       to: [
         activate(VariableNames.Vim.NormalMode),
-        deactivate(VariableNames.Vim.VisualMode),
+        deactivate(VariableNames.Vim.DeleteMode),
         notifyAboutNormalMode,
       ],
     }),
