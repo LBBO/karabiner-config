@@ -8,6 +8,11 @@ const bundlesWithNativeVim = [
   'com.microsoft.VSCode',
 ]
 
+const isInAppWithNativeVim: Condition = {
+  type: 'frontmost_application_if',
+  bundle_identifiers: bundlesWithNativeVim,
+}
+
 const notInAppWithNativeVim: Condition = {
   type: 'frontmost_application_unless',
   bundle_identifiers: bundlesWithNativeVim,
@@ -99,7 +104,7 @@ export const vimModeRules: KarabinerRules[] = [
         description: 'Exit Vim Mode in Native Vim Apps',
         type: 'basic',
         conditions: [
-          notInAppWithNativeVim,
+          isInAppWithNativeVim,
           isVimModeActive,
         ],
         from: { any: 'key_code' },
