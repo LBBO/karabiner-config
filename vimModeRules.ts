@@ -1,11 +1,4 @@
-import {
-  Condition,
-  KarabinerRules,
-  KeyCode,
-  Manipulator,
-  Modifiers,
-  To,
-} from './types'
+import { Condition, KarabinerRules, KeyCode, Modifiers, To } from './types'
 
 export const vimModeVariableName = 'vim_mode'
 const bundlesWithNativeVim = [
@@ -13,6 +6,8 @@ const bundlesWithNativeVim = [
   'com.jetbrains.pycharm',
   'com.jetbrains.idea',
   'com.microsoft.VSCode',
+  'com.mitchellh.ghostty',
+  'md.obsidian',
 ]
 
 const isInAppWithNativeVim: Condition = {
