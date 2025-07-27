@@ -6,7 +6,18 @@ import {
   Modifiers,
   To,
 } from './types'
-import { VariableNames } from './variableNames'
+import {
+  activate,
+  deactivate,
+  isActive,
+  isNotActive,
+  VariableNames,
+} from './variables'
+import {
+  notifyAboutNormalMode,
+  notifyAboutInsertMode,
+  notifyAboutVisualMode,
+} from './notifications'
 
 export const vimModeVariableName = VariableNames.Vim.NormalMode
 const bundlesWithNativeVim = [
@@ -17,32 +28,6 @@ const bundlesWithNativeVim = [
   'com.mitchellh.ghostty',
   'md.obsidian',
 ]
-
-const deactivate = (name): To => ({
-  set_variable: {
-    name,
-    value: 0,
-  },
-})
-
-const activate = (name): To => ({
-  set_variable: {
-    name,
-    value: 1,
-  },
-})
-
-const isActive = (name: string): Condition => ({
-  type: 'variable_if',
-  name,
-  value: 1,
-})
-
-const isNotActive = (name: string): Condition => ({
-  type: 'variable_unless',
-  name,
-  value: 1,
-})
 
 const isInAppWithNativeVim: Condition = {
   type: 'frontmost_application_if',
@@ -68,21 +53,6 @@ const isVimModeNotActive: Condition = {
 const activateVimMode = activate(VariableNames.Vim.NormalMode)
 
 const deactivateVimMode = deactivate(VariableNames.Vim.NormalMode)
-
-const notifyAboutNormalMode: To = {
-  shell_command:
-    'osascript -e \'display notification "Press [i] to leave" with title "-- NORMAL --"\'',
-}
-
-const notifyAboutInsertMode: To = {
-  shell_command:
-    'osascript -e \'display notification with title "-- INSERT --"\'',
-}
-
-const notifyAboutVisualMode: To = {
-  shell_command:
-    'osascript -e \'display notification "Press [v] again to go back to Vim Mode" with title "-- VISUAL --"\'',
-}
 
 type KeyRuleDefinition = Omit<Manipulator, 'from' | 'type'> & {
   modifiers?: Modifiers
@@ -546,7 +516,7 @@ const disableUnusedKeysRules = [
     },
     conditions: [isActive(mode), notInAppWithNativeVim],
     to: [{ key_code: 'vk_none' }],
-  },
+  } satisfies Manipulator,
 ])
 
 export const vimModeRules: KarabinerRules[] = [

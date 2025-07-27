@@ -120,7 +120,7 @@ export const modifiersKeys = [
   'any',
 ]
 
-export type ModifiersKeys = typeof modifiersKeys[number]
+export type ModifiersKeys = (typeof modifiersKeys)[number]
 
 export interface From {
   any?: 'pointing_button' | 'key_code' | 'consumer_key_code'

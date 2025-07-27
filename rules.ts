@@ -12,6 +12,9 @@ import { workRules } from './workRules'
 import { privateRules } from './privateRules'
 import { vimModeRules } from './vimModeRules'
 import { hyperKeyRules } from './hyperKeyRules'
+import { VariableNames } from './variables'
+import { activate } from './variables'
+import { notifyAboutNormalMode } from './notifications'
 
 const commonLayers: HyperKeyLayers = {
   // spacebar: deeplink(
@@ -141,36 +144,7 @@ const commonLayers: HyperKeyLayers = {
   // v = "moVe" which isn't "m" because we want it to be on the left hand
   // so that hjkl work like they do in vim
   v: {
-    h: {
-      to: [{ key_code: 'left_arrow' }],
-    },
-    j: {
-      to: [{ key_code: 'down_arrow' }],
-    },
-    k: {
-      to: [{ key_code: 'up_arrow' }],
-    },
-    l: {
-      to: [{ key_code: 'right_arrow' }],
-    },
-    // Magicmove via homerow.app
-    // m: {
-    //   to: [{ key_code: "f", modifiers: ["right_control"] }],
-    //   // TODO: Trigger Vim Easymotion when VSCode is focused
-    // },
-    // Scroll mode via homerow.app
-    // s: {
-    //   to: [{ key_code: "j", modifiers: ["right_control"] }],
-    // },
-    // d: {
-    //   to: [{ key_code: "d", modifiers: ["right_shift", "right_command"] }],
-    // },
-    u: {
-      to: [{ key_code: 'page_down' }],
-    },
-    i: {
-      to: [{ key_code: 'page_up' }],
-    },
+    to: [activate(VariableNames.Vim.NormalMode), notifyAboutNormalMode],
   },
 
   // m = "Music" or "Mouse"
