@@ -10,6 +10,9 @@ export const VariableNames = {
     ChangeMode: 'vim_change_mode',
     DeleteMode: 'vim_delete_mode',
     GPressed: 'g_pressed',
+    // Additive selection modes
+    InnerSelection: 'vim_inner_selection',
+    OuterSelection: 'vim_outer_selection',
   },
 } as const
 
@@ -17,9 +20,10 @@ type TransitiveStringProperties<T extends object> = {
   [K in keyof T]: T[K] extends object ? TransitiveStringProperties<T[K]> : T[K]
 }[keyof T]
 
-export type VariableName = TransitiveStringProperties<typeof VariableNames>
-  // This is basically just for pretty-printing
-  & {}
+export type VariableName = TransitiveStringProperties<
+  typeof VariableNames
+> & // This is basically just for pretty-printing
+{}
 
 export const deactivate = (name: VariableName): To => ({
   set_variable: {

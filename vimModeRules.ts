@@ -392,6 +392,74 @@ const enteringAndLeavingYankModeRules: Manipulator[] = [
       activate(VariableNames.Vim.NormalMode),
     ],
   },
+  // Activate inner selection mode
+  {
+    type: 'basic',
+    description: 'Activate inner selection',
+    from: { key_code: 'i' },
+    conditions: [
+      isActive(VariableNames.Vim.YankMode),
+      isNotActive(VariableNames.Vim.InnerSelection),
+      notInAppWithNativeVim,
+    ],
+    to: [activate(VariableNames.Vim.InnerSelection)],
+  },
+  // Activate outer selection mode
+  {
+    type: 'basic',
+    description: 'Activate outer selection',
+    from: { key_code: 'a' },
+    conditions: [
+      isActive(VariableNames.Vim.YankMode),
+      isNotActive(VariableNames.Vim.OuterSelection),
+      notInAppWithNativeVim,
+    ],
+    to: [activate(VariableNames.Vim.OuterSelection)],
+  },
+  // Yank inner word (yiw) - triggered when both YankMode and InnerSelection are active
+  {
+    type: 'basic',
+    description: 'Yank inner word',
+    from: { key_code: 'w' },
+    conditions: [
+      isActive(VariableNames.Vim.YankMode),
+      isActive(VariableNames.Vim.InnerSelection),
+      notInAppWithNativeVim,
+    ],
+    to: [
+      // Select the current word (inner word)
+      { key_code: 'left_arrow', modifiers: ['option'] },
+      { key_code: 'right_arrow', modifiers: ['option', 'left_shift'] },
+      { key_code: 'c', modifiers: ['left_command'] },
+      { key_code: 'left_arrow' },
+      deactivate(VariableNames.Vim.YankMode),
+      deactivate(VariableNames.Vim.InnerSelection),
+      activate(VariableNames.Vim.NormalMode),
+    ],
+  },
+  // Yank a word (yaw) - triggered when both YankMode and OuterSelection are active
+  {
+    type: 'basic',
+    description: 'Yank a word',
+    from: { key_code: 'w' },
+    conditions: [
+      isActive(VariableNames.Vim.YankMode),
+      isActive(VariableNames.Vim.OuterSelection),
+      notInAppWithNativeVim,
+    ],
+    to: [
+      // Select the current word including trailing whitespace
+      { key_code: 'left_arrow', modifiers: ['option'] },
+      { key_code: 'right_arrow', modifiers: ['option', 'left_shift'] },
+      { key_code: 'right_arrow', modifiers: ['left_shift'] }, // Include trailing space
+      { key_code: 'c', modifiers: ['left_command'] },
+      { key_code: 'left_arrow' },
+      deactivate(VariableNames.Vim.YankMode),
+      deactivate(VariableNames.Vim.OuterSelection),
+      activate(VariableNames.Vim.NormalMode),
+    ],
+  },
+  // Escape cleanup for all yank-related modes
   ...(['escape', 'caps_lock'] as const).map(
     (key_code): Manipulator => ({
       type: 'basic',
@@ -405,6 +473,8 @@ const enteringAndLeavingYankModeRules: Manipulator[] = [
       to: [
         activate(VariableNames.Vim.NormalMode),
         deactivate(VariableNames.Vim.YankMode),
+        deactivate(VariableNames.Vim.InnerSelection),
+        deactivate(VariableNames.Vim.OuterSelection),
         notifyAboutNormalMode,
       ],
     }),
@@ -481,6 +551,8 @@ const disableUnusedKeysRules = [
   VariableNames.Vim.DeleteMode,
   VariableNames.Vim.YankMode,
   VariableNames.Vim.ChangeMode,
+  VariableNames.Vim.InnerSelection,
+  VariableNames.Vim.OuterSelection,
 ].flatMap((mode) => [
   ...notDisabledModifiers.map(
     (key_code): Manipulator => ({
