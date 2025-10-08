@@ -14,8 +14,8 @@ import {
   VariableNames,
 } from './variables'
 import {
-  notifyAboutNormalMode,
   notifyAboutInsertMode,
+  notifyAboutNormalMode,
   notifyAboutVisualMode,
 } from './notifications'
 
@@ -38,21 +38,6 @@ const notInAppWithNativeVim: Condition = {
   type: 'frontmost_application_unless',
   bundle_identifiers: bundlesWithNativeVim,
 }
-
-const isVimModeActive: Condition = {
-  type: 'variable_if',
-  name: vimModeVariableName,
-  value: 1,
-}
-
-const isVimModeNotActive: Condition = {
-  ...isVimModeActive,
-  type: 'variable_unless',
-}
-
-const activateVimMode = activate(VariableNames.Vim.NormalMode)
-
-const deactivateVimMode = deactivate(VariableNames.Vim.NormalMode)
 
 type KeyRuleDefinition = Omit<Manipulator, 'from' | 'type'> & {
   modifiers?: Modifiers
@@ -193,7 +178,7 @@ const normalModeActions: VimModeLayerRules = {
 const enterInsertFromNormalRules: VimModeLayerRules = {
   i: [
     {
-      to: [deactivateVimMode, notifyAboutInsertMode],
+      to: [deactivate(VariableNames.Vim.NormalMode), notifyAboutInsertMode],
       description: 'Enter Insert Mode',
     },
     {
@@ -202,7 +187,7 @@ const enterInsertFromNormalRules: VimModeLayerRules = {
       },
       to: [
         { key_code: 'left_arrow', modifiers: ['command'] },
-        deactivateVimMode,
+        deactivate(VariableNames.Vim.NormalMode),
         notifyAboutInsertMode,
       ],
     },
@@ -210,7 +195,7 @@ const enterInsertFromNormalRules: VimModeLayerRules = {
 
   a: [
     {
-      to: [deactivateVimMode, notifyAboutInsertMode],
+      to: [deactivate(VariableNames.Vim.NormalMode), notifyAboutInsertMode],
       description: 'Enter Insert Mode after the cursor',
     },
     {
@@ -219,7 +204,7 @@ const enterInsertFromNormalRules: VimModeLayerRules = {
       },
       to: [
         { key_code: 'right_arrow', modifiers: ['command'] },
-        deactivateVimMode,
+        deactivate(VariableNames.Vim.NormalMode),
         notifyAboutInsertMode,
       ],
     },
@@ -230,7 +215,7 @@ const enterInsertFromNormalRules: VimModeLayerRules = {
       to: [
         { key_code: 'right_arrow', modifiers: ['command'] },
         { key_code: 'return_or_enter' },
-        deactivateVimMode,
+        deactivate(VariableNames.Vim.NormalMode),
         notifyAboutInsertMode,
       ],
       description: 'Open a new line below and enter Insert Mode',
@@ -243,7 +228,7 @@ const enterInsertFromNormalRules: VimModeLayerRules = {
         { key_code: 'left_arrow', modifiers: ['command'] },
         { key_code: 'return_or_enter' },
         { key_code: 'up_arrow' },
-        deactivateVimMode,
+        deactivate(VariableNames.Vim.NormalMode),
         notifyAboutInsertMode,
       ],
     },
@@ -532,16 +517,19 @@ export const vimModeRules: KarabinerRules[] = [
             mandatory: ['right_shift'],
           },
         },
-        conditions: [notInAppWithNativeVim, isVimModeNotActive],
-        to: [activateVimMode, notifyAboutNormalMode],
+        conditions: [
+          notInAppWithNativeVim,
+          isNotActive(VariableNames.Vim.NormalMode),
+        ],
+        to: [activate(VariableNames.Vim.NormalMode), notifyAboutNormalMode],
       },
       {
         description: 'Escape -> Exit Vim Mode',
         type: 'basic',
-        conditions: [isVimModeActive],
+        conditions: [isActive(VariableNames.Vim.NormalMode)],
         from: { key_code: 'escape' },
         to: [
-          deactivateVimMode,
+          deactivate(VariableNames.Vim.NormalMode),
           notifyAboutInsertMode,
           // Just in case this is still active
           deactivate(VariableNames.Vim.GPressed),
@@ -550,10 +538,13 @@ export const vimModeRules: KarabinerRules[] = [
       {
         description: 'Caps lock -> Exit Vim Mode',
         type: 'basic',
-        conditions: [notInAppWithNativeVim, isVimModeActive],
+        conditions: [
+          notInAppWithNativeVim,
+          isActive(VariableNames.Vim.NormalMode),
+        ],
         from: { key_code: 'caps_lock' },
         to: [
-          deactivateVimMode,
+          deactivate(VariableNames.Vim.NormalMode),
           notifyAboutInsertMode,
           // Just in case this is still active
           deactivate(VariableNames.Vim.GPressed),
@@ -562,10 +553,13 @@ export const vimModeRules: KarabinerRules[] = [
       {
         description: 'Exit Vim Mode in Native Vim Apps',
         type: 'basic',
-        conditions: [isInAppWithNativeVim, isVimModeActive],
+        conditions: [
+          isInAppWithNativeVim,
+          isActive(VariableNames.Vim.NormalMode),
+        ],
         from: { any: 'key_code' },
         to: [
-          deactivateVimMode,
+          deactivate(VariableNames.Vim.NormalMode),
           notifyAboutInsertMode,
           // Just in case this is still active
           deactivate(VariableNames.Vim.GPressed),
@@ -676,7 +670,10 @@ function makeVimModeManipulators(rules: VimModeLayerRules): Manipulator[] {
 function makeVimNormalModeRules(rules: VimModeLayerRules): Manipulator[] {
   return makeVimModeManipulators(rules).map((manipulator) => ({
     ...manipulator,
-    conditions: [isVimModeActive, ...(manipulator.conditions ?? [])],
+    conditions: [
+      isActive(VariableNames.Vim.NormalMode),
+      ...(manipulator.conditions ?? []),
+    ],
   }))
 }
 
