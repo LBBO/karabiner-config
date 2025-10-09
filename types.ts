@@ -8,17 +8,22 @@ export interface Manipulator {
   type: 'basic'
   from: From
   to?: To[]
+  /**
+   * to_delayed_action posts events after 500 milliseconds from the from key is pressed.
+   */
+  to_delayed_action?: ToDelayedAction
   to_after_key_up?: To[]
   to_if_alone?: To[]
   parameters?: Parameters
-  conditions?: Conditions[]
+  conditions?: Condition[]
 }
 
 export interface Parameters {
   'basic.simultaneous_threshold_milliseconds'?: number
+  'basic.to_delayed_action_delay_milliseconds'?: number
 }
 
-type Conditions =
+export type Condition =
   | FrontMostApplicationCondition
   | DeviceCondition
   | KeybaordTypeCondition
@@ -26,7 +31,7 @@ type Conditions =
   | VaribaleCondition
   | EventChangedCondition
 
-type FrontMostApplicationCondition = {
+export type FrontMostApplicationCondition = {
   type: 'frontmost_application_if' | 'frontmost_application_unless'
   bundle_identifiers?: string[]
   file_paths?: string[]
@@ -93,32 +98,36 @@ export interface SimultaneousOptions {
   detect_key_down_uninterruptedly?: boolean
 }
 
-type ModifiersKeys =
-  | 'caps_lock'
-  | 'left_command'
-  | 'left_control'
-  | 'left_option'
-  | 'left_shift'
-  | 'right_command'
-  | 'right_control'
-  | 'right_option'
-  | 'right_shift'
-  | 'fn'
-  | 'command'
-  | 'control'
-  | 'option'
-  | 'shift'
-  | 'left_alt'
-  | 'left_gui'
-  | 'right_alt'
-  | 'right_gui'
-  | 'any'
+export const modifiersKeys = [
+  'caps_lock',
+  'left_command',
+  'left_control',
+  'left_option',
+  'left_shift',
+  'right_command',
+  'right_control',
+  'right_option',
+  'right_shift',
+  'fn',
+  'command',
+  'control',
+  'option',
+  'shift',
+  'left_alt',
+  'left_gui',
+  'right_alt',
+  'right_gui',
+  'any',
+]
+
+export type ModifiersKeys = (typeof modifiersKeys)[number]
 
 export interface From {
+  any?: 'pointing_button' | 'key_code' | 'consumer_key_code'
   key_code?: KeyCode
+  modifiers?: Modifiers
   simultaneous?: SimultaneousFrom[]
   simultaneous_options?: SimultaneousOptions
-  modifiers?: Modifiers
 }
 
 export interface Modifiers {
@@ -145,6 +154,24 @@ export interface To {
   select_input_source?: {
     language: string
   }
+  /**
+   * to.halt is specified in to_if_alone or to_if_held_down and is used to cancel subsequent actions like to_after_key_up or to_delayed_action.
+   */
+  halt?: boolean
+}
+
+/**
+ * to_delayed_action posts events after 500 milliseconds from the from key is pressed.
+ */
+export interface ToDelayedAction {
+  /**
+   * An array of to events that will be sent if no other key is pressed after the from key is pressed.
+   */
+  to_if_invoked?: To[]
+  /**
+   * An array of to events that will be sent if another key is pressed after the from key is pressed before to_delayed_action.to_if_invoked is sent.
+   */
+  to_if_canceled?: To[]
 }
 
 export interface MouseKey {
