@@ -9,7 +9,7 @@ export const privateRules: HyperKeyLayers = {
     c: app('Cursor'),
     // *m*arkdown
     n: app('Notion'),
-    p: app('PyCharm Professional Edition'),
+    p: app('PyCharm'),
   },
 
   // c = "Chat"
