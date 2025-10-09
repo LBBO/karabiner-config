@@ -11,6 +11,7 @@ import {
   deactivate,
   isActive,
   isNotActive,
+  VariableName,
   VariableNames,
 } from './variables'
 import {
@@ -259,6 +260,8 @@ const enteringAndLeavingVisualModeRules: Manipulator[] = [
       conditions: [
         isActive(VariableNames.Vim.VisualMode),
         isNotActive(VariableNames.Vim.NormalMode),
+        isNotActive(VariableNames.Vim.InnerSelection),
+        isNotActive(VariableNames.Vim.OuterSelection),
         notInAppWithNativeVim,
       ],
       to: [
@@ -358,6 +361,13 @@ const enteringAndLeavingDeleteModeRules: Manipulator[] = [
       ],
     }),
   ),
+  // Use the abstracted selection API for delete mode
+  ...createSelectionModeRules(
+    'Delete',
+    VariableNames.Vim.DeleteMode,
+    [{ key_code: 'x', modifiers: ['left_command'] }], // Delete action
+    [activate(VariableNames.Vim.NormalMode), notifyAboutNormalMode], // Cleanup actions
+  ),
 ]
 
 const enteringAndLeavingYankModeRules: Manipulator[] = [
@@ -392,92 +402,14 @@ const enteringAndLeavingYankModeRules: Manipulator[] = [
       activate(VariableNames.Vim.NormalMode),
     ],
   },
-  // Activate inner selection mode
-  {
-    type: 'basic',
-    description: 'Activate inner selection',
-    from: { key_code: 'i' },
-    conditions: [
-      isActive(VariableNames.Vim.YankMode),
-      isNotActive(VariableNames.Vim.InnerSelection),
-      notInAppWithNativeVim,
-    ],
-    to: [activate(VariableNames.Vim.InnerSelection)],
-  },
-  // Activate outer selection mode
-  {
-    type: 'basic',
-    description: 'Activate outer selection',
-    from: { key_code: 'a' },
-    conditions: [
-      isActive(VariableNames.Vim.YankMode),
-      isNotActive(VariableNames.Vim.OuterSelection),
-      notInAppWithNativeVim,
-    ],
-    to: [activate(VariableNames.Vim.OuterSelection)],
-  },
-  // Yank inner word (yiw) - triggered when both YankMode and InnerSelection are active
-  {
-    type: 'basic',
-    description: 'Yank inner word',
-    from: { key_code: 'w' },
-    conditions: [
-      isActive(VariableNames.Vim.YankMode),
-      isActive(VariableNames.Vim.InnerSelection),
-      notInAppWithNativeVim,
-    ],
-    to: [
-      // Select the current word (inner word)
-      { key_code: 'left_arrow', modifiers: ['option'] },
-      { key_code: 'right_arrow', modifiers: ['option', 'left_shift'] },
+  ...createSelectionModeRules(
+    'Yank',
+    VariableNames.Vim.YankMode,
+    [
       { key_code: 'c', modifiers: ['left_command'] },
       { key_code: 'left_arrow' },
-      deactivate(VariableNames.Vim.YankMode),
-      deactivate(VariableNames.Vim.InnerSelection),
-      activate(VariableNames.Vim.NormalMode),
-    ],
-  },
-  // Yank a word (yaw) - triggered when both YankMode and OuterSelection are active
-  {
-    type: 'basic',
-    description: 'Yank a word',
-    from: { key_code: 'w' },
-    conditions: [
-      isActive(VariableNames.Vim.YankMode),
-      isActive(VariableNames.Vim.OuterSelection),
-      notInAppWithNativeVim,
-    ],
-    to: [
-      // Select the current word including trailing whitespace
-      { key_code: 'left_arrow', modifiers: ['option'] },
-      { key_code: 'right_arrow', modifiers: ['option', 'left_shift'] },
-      { key_code: 'right_arrow', modifiers: ['left_shift'] }, // Include trailing space
-      { key_code: 'c', modifiers: ['left_command'] },
-      { key_code: 'left_arrow' },
-      deactivate(VariableNames.Vim.YankMode),
-      deactivate(VariableNames.Vim.OuterSelection),
-      activate(VariableNames.Vim.NormalMode),
-    ],
-  },
-  // Escape cleanup for all yank-related modes
-  ...(['escape', 'caps_lock'] as const).map(
-    (key_code): Manipulator => ({
-      type: 'basic',
-      description: `Stop yanking (${key_code})`,
-      from: { key_code },
-      conditions: [
-        isActive(VariableNames.Vim.YankMode),
-        isNotActive(VariableNames.Vim.NormalMode),
-        notInAppWithNativeVim,
-      ],
-      to: [
-        activate(VariableNames.Vim.NormalMode),
-        deactivate(VariableNames.Vim.YankMode),
-        deactivate(VariableNames.Vim.InnerSelection),
-        deactivate(VariableNames.Vim.OuterSelection),
-        notifyAboutNormalMode,
-      ],
-    }),
+    ], // Copy action
+    [activate(VariableNames.Vim.NormalMode), notifyAboutNormalMode], // Cleanup actions
   ),
 ]
 
@@ -529,6 +461,13 @@ const enteringAndLeavingChangeModeRules: Manipulator[] = [
       ],
     }),
   ),
+  // Use the abstracted selection API for change mode
+  ...createSelectionModeRules(
+    'Change',
+    VariableNames.Vim.ChangeMode,
+    [{ key_code: 'x', modifiers: ['left_command'] }], // Cut action
+    [deactivate(VariableNames.Vim.NormalMode), notifyAboutInsertMode], // Cleanup actions - change mode enters insert mode
+  ),
 ]
 
 const notDisabledModifiers: KeyCode[] = [
@@ -551,8 +490,6 @@ const disableUnusedKeysRules = [
   VariableNames.Vim.DeleteMode,
   VariableNames.Vim.YankMode,
   VariableNames.Vim.ChangeMode,
-  VariableNames.Vim.InnerSelection,
-  VariableNames.Vim.OuterSelection,
 ].flatMap((mode) => [
   ...notDisabledModifiers.map(
     (key_code): Manipulator => ({
@@ -645,6 +582,13 @@ export const vimModeRules: KarabinerRules[] = [
       ...enteringAndLeavingVisualModeRules,
       ...makeVimVisualModeRules(vimMotions),
       ...makeVimVisualModeRules(visualModeActions, false),
+      // Add viw and vaw rules using the abstracted selection API
+      ...createSelectionModeRules(
+        'Visual',
+        VariableNames.Vim.VisualMode,
+        [], // No action after selection in visual mode - just select
+        [activate(VariableNames.Vim.VisualMode)], // Cleanup actions
+      ),
     ],
   },
   {
@@ -761,6 +705,8 @@ function makeVimVisualModeRules(
     })),
     conditions: [
       isActive(VariableNames.Vim.VisualMode),
+      isNotActive(VariableNames.Vim.InnerSelection),
+      isNotActive(VariableNames.Vim.OuterSelection),
       ...(manipulator.conditions ?? []),
     ],
   }))
@@ -844,4 +790,121 @@ function makeVimChangeModeRules(
       ...(manipulator.conditions ?? []),
     ],
   }))
+}
+
+// Abstracted selection API for inner/outer word operations
+function createSelectionModeRules(
+  baseMode: string,
+  baseModeVariable: VariableName,
+  actionAfterSelection: To[],
+  cleanupActions: To[] = [],
+): Manipulator[] {
+  return [
+    // Activate inner selection mode
+    {
+      type: 'basic',
+      description: `Activate inner selection in ${baseMode}`,
+      from: { key_code: 'i' },
+      conditions: [
+        isActive(baseModeVariable),
+        isNotActive(VariableNames.Vim.InnerSelection),
+        isNotActive(VariableNames.Vim.OuterSelection),
+        notInAppWithNativeVim,
+      ],
+      to: [activate(VariableNames.Vim.InnerSelection)],
+    },
+    // Activate outer selection mode
+    {
+      type: 'basic',
+      description: `Activate outer selection in ${baseMode}`,
+      from: { key_code: 'a' },
+      conditions: [
+        isActive(baseModeVariable),
+        isNotActive(VariableNames.Vim.InnerSelection),
+        isNotActive(VariableNames.Vim.OuterSelection),
+        notInAppWithNativeVim,
+      ],
+      to: [activate(VariableNames.Vim.OuterSelection)],
+    },
+    // Inner word selection (e.g., yiw, diw, ciw)
+    {
+      type: 'basic',
+      description: `${baseMode} inner word`,
+      from: { key_code: 'w' },
+      conditions: [
+        isActive(baseModeVariable),
+        isActive(VariableNames.Vim.InnerSelection),
+        notInAppWithNativeVim,
+      ],
+      to: [
+        // Select the current word (inner word)
+        { key_code: 'left_arrow', modifiers: ['option'] },
+        { key_code: 'right_arrow', modifiers: ['option', 'left_shift'] },
+        ...actionAfterSelection,
+        deactivate(baseModeVariable),
+        deactivate(VariableNames.Vim.InnerSelection),
+        ...cleanupActions,
+      ],
+    },
+    // Outer word selection (e.g., yaw, daw, caw)
+    {
+      type: 'basic',
+      description: `${baseMode} a word`,
+      from: { key_code: 'w' },
+      conditions: [
+        isActive(baseModeVariable),
+        isActive(VariableNames.Vim.OuterSelection),
+        notInAppWithNativeVim,
+      ],
+      to: [
+        // Select the current word including trailing whitespace
+        { key_code: 'left_arrow', modifiers: ['option'] },
+        { key_code: 'right_arrow', modifiers: ['option', 'left_shift'] },
+        { key_code: 'right_arrow', modifiers: ['left_shift'] }, // Include trailing space
+        ...actionAfterSelection,
+        deactivate(baseModeVariable),
+        deactivate(VariableNames.Vim.OuterSelection),
+        ...cleanupActions,
+      ],
+    },
+    // Escape cleanup for selection modes
+    ...(['escape', 'caps_lock'] as const).map(
+      (key_code): Manipulator => ({
+        type: 'basic',
+        description: `Stop ${baseMode} selection (${key_code})`,
+        from: { key_code },
+        conditions: [
+          isActive(baseModeVariable),
+          isActive(VariableNames.Vim.InnerSelection),
+          isNotActive(VariableNames.Vim.NormalMode),
+          notInAppWithNativeVim,
+        ],
+        to: [
+          activate(VariableNames.Vim.NormalMode),
+          deactivate(baseModeVariable),
+          deactivate(VariableNames.Vim.InnerSelection),
+          ...cleanupActions,
+        ],
+      }),
+    ),
+    ...(['escape', 'caps_lock'] as const).map(
+      (key_code): Manipulator => ({
+        type: 'basic',
+        description: `Stop ${baseMode} selection (${key_code})`,
+        from: { key_code },
+        conditions: [
+          isActive(baseModeVariable),
+          isActive(VariableNames.Vim.OuterSelection),
+          isNotActive(VariableNames.Vim.NormalMode),
+          notInAppWithNativeVim,
+        ],
+        to: [
+          activate(VariableNames.Vim.NormalMode),
+          deactivate(baseModeVariable),
+          deactivate(VariableNames.Vim.OuterSelection),
+          ...cleanupActions,
+        ],
+      }),
+    ),
+  ]
 }
