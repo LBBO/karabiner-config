@@ -261,13 +261,13 @@ const enteringAndLeavingVisualModeRules: Manipulator[] = [
       conditions: [
         isActive(VariableNames.Vim.VisualMode),
         isNotActive(VariableNames.Vim.NormalMode),
-        isNotActive(VariableNames.Vim.InnerSelection),
-        isNotActive(VariableNames.Vim.OuterSelection),
         notInAppWithNativeVim,
       ],
       to: [
         activate(VariableNames.Vim.NormalMode),
         deactivate(VariableNames.Vim.VisualMode),
+        deactivate(VariableNames.Vim.InnerSelection),
+        deactivate(VariableNames.Vim.OuterSelection),
         notifyAboutNormalMode,
       ],
     }),
@@ -358,6 +358,8 @@ const enteringAndLeavingDeleteModeRules: Manipulator[] = [
       to: [
         activate(VariableNames.Vim.NormalMode),
         deactivate(VariableNames.Vim.DeleteMode),
+        deactivate(VariableNames.Vim.InnerSelection),
+        deactivate(VariableNames.Vim.OuterSelection),
         notifyAboutNormalMode,
       ],
     }),
@@ -403,6 +405,20 @@ const enteringAndLeavingYankModeRules: Manipulator[] = [
       activate(VariableNames.Vim.NormalMode),
     ],
   },
+  ...(['escape', 'caps_lock'] as const).map(
+    (key_code): Manipulator => ({
+      type: 'basic',
+      description: `Stop yanking (${key_code})`,
+      from: { key_code },
+      conditions: [isActive(VariableNames.Vim.YankMode), notInAppWithNativeVim],
+      to: [
+        activate(VariableNames.Vim.NormalMode),
+        deactivate(VariableNames.Vim.YankMode),
+        deactivate(VariableNames.Vim.InnerSelection),
+        deactivate(VariableNames.Vim.OuterSelection),
+      ],
+    }),
+  ),
   ...createSelectionModeRules(
     'Yank',
     VariableNames.Vim.YankMode,
@@ -410,7 +426,7 @@ const enteringAndLeavingYankModeRules: Manipulator[] = [
       { key_code: 'c', modifiers: ['left_command'] },
       { key_code: 'left_arrow' },
     ], // Copy action
-    [activate(VariableNames.Vim.NormalMode), notifyAboutNormalMode], // Cleanup actions
+    [activate(VariableNames.Vim.NormalMode)], // Cleanup actions
   ),
 ]
 
@@ -884,44 +900,5 @@ function createSelectionModeRules(
         ...cleanupActions,
       ],
     },
-    // Escape cleanup for selection modes
-    ...(['escape', 'caps_lock'] as const).map(
-      (key_code): Manipulator => ({
-        type: 'basic',
-        description: `Stop ${baseMode} selection (${key_code})`,
-        from: { key_code },
-        conditions: [
-          isActive(baseModeVariable),
-          isActive(VariableNames.Vim.InnerSelection),
-          isNotActive(VariableNames.Vim.NormalMode),
-          notInAppWithNativeVim,
-        ],
-        to: [
-          activate(VariableNames.Vim.NormalMode),
-          deactivate(baseModeVariable),
-          deactivate(VariableNames.Vim.InnerSelection),
-          ...cleanupActions,
-        ],
-      }),
-    ),
-    ...(['escape', 'caps_lock'] as const).map(
-      (key_code): Manipulator => ({
-        type: 'basic',
-        description: `Stop ${baseMode} selection (${key_code})`,
-        from: { key_code },
-        conditions: [
-          isActive(baseModeVariable),
-          isActive(VariableNames.Vim.OuterSelection),
-          isNotActive(VariableNames.Vim.NormalMode),
-          notInAppWithNativeVim,
-        ],
-        to: [
-          activate(VariableNames.Vim.NormalMode),
-          deactivate(baseModeVariable),
-          deactivate(VariableNames.Vim.OuterSelection),
-          ...cleanupActions,
-        ],
-      }),
-    ),
   ]
 }

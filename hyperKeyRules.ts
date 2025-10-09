@@ -1,4 +1,5 @@
 import { KarabinerRules, Manipulator, modifiersKeys } from './types'
+import { isNotActive, VariableNames } from './variables'
 import { vimModeVariableName } from './vimModeRules'
 
 const capsLockToHyperKey: Manipulator = {
@@ -12,11 +13,11 @@ const capsLockToHyperKey: Manipulator = {
     },
   },
   conditions: [
-    {
-      type: 'variable_unless',
-      name: vimModeVariableName,
-      value: 1,
-    },
+    isNotActive(VariableNames.Vim.NormalMode),
+    isNotActive(VariableNames.Vim.VisualMode),
+    isNotActive(VariableNames.Vim.ChangeMode),
+    isNotActive(VariableNames.Vim.DeleteMode),
+    isNotActive(VariableNames.Vim.YankMode),
   ],
   to: [
     {
