@@ -26,6 +26,7 @@ const bundlesWithNativeVim = [
   'com.jetbrains.pycharm',
   'com.jetbrains.idea',
   'com.microsoft.VSCode',
+  'com.todesktop.230313mzl4w4u92', // Cursor
   'com.mitchellh.ghostty',
   'md.obsidian',
 ]
@@ -572,6 +573,22 @@ export const vimModeRules: KarabinerRules[] = [
           notifyAboutInsertMode,
           // Just in case this is still active
           deactivate(VariableNames.Vim.GPressed),
+        ],
+      },
+      {
+        description: 'Exit Vim Mode in Native Vim Apps',
+        type: 'basic',
+        conditions: [
+          isInAppWithNativeVim,
+          isActive(VariableNames.Vim.VisualMode),
+        ],
+        from: { any: 'key_code' },
+        to: [
+          deactivate(VariableNames.Vim.VisualMode),
+          notifyAboutInsertMode,
+          deactivate(VariableNames.Vim.GPressed),
+          deactivate(VariableNames.Vim.InnerSelection),
+          deactivate(VariableNames.Vim.OuterSelection),
         ],
       },
     ],
