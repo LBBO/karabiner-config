@@ -82,8 +82,8 @@ const commonLayers: HyperKeyLayers = {
     o: shell`shortcuts run "Turn off Focus"`,
     p: shell`shortcuts run "Activate Personal Focus"`,
     s: shell`shortcuts run "Activate Sleep Focus"`,
-    t: shell`shortcuts run "Activate Tutorial Focus"`,
     u: shell`shortcuts run "Activate Uni Focus"`,
+    v: shell`shortcuts run "Activate Vortrag Focus"`,
     w: shell`shortcuts run "Activate Work Focus"`,
   },
 
