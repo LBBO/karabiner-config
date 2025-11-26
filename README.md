@@ -15,7 +15,7 @@ You probably don't want to use my exact configuration, as it's optimized for my 
 ## Installation
 
 1. Install & start [Karabiner Elements](https://karabiner-elements.pqrs.org/)
-2. Clone this repository
+2. Clone this repository into a directory that macOS doesn't try to protect (e.g. Desktop or Downloads won't work - all of the folders that macOS occasionally prompts you to give permissions to apps for)
 3. Delete the default `~/.config/karabiner` folder
 4. Create a symlink with `ln -s ~/github/mxstbr/karabiner ~/.config` (where `~/github/mxstbr/karabiner` is your local path to where you cloned the repository)
 5. [Restart karabiner_console_user_server](https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/) with `launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server`
