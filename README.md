@@ -1,4 +1,5 @@
 # @LBBO's Karabiner Elements configuration
+
 > Shamelessly stolen from [@mxstbr](https://github.com/mxstbr/karabiner)
 
 If you like TypeScript and want your Karabiner configuration maintainable & type-safe, you probably want to use the custom configuration DSL / generator @mxstbr created in `rules.ts` and `utils.ts`!
@@ -17,7 +18,7 @@ You probably don't want to use my exact configuration, as it's optimized for my 
 2. Clone this repository
 3. Delete the default `~/.config/karabiner` folder
 4. Create a symlink with `ln -s ~/github/mxstbr/karabiner ~/.config` (where `~/github/mxstbr/karabiner` is your local path to where you cloned the repository)
-5. [Restart karabiner_console_user_server](https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/) with `launchctl kickstart -k gui/$(id -u)/org.pqrs.karabiner.karabiner_console_user_server`
+5. [Restart karabiner_console_user_server](https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/) with `launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server`
 6. Add the `raycast-scripts` directory to your Raycast scripts by opening Raycast, going to the "Extensions" tab, searching for "Script Commands", click "Add Directories" and then choose the `raycast-scripts` directory in this repository
 7. The "Open Google Calendar in Arc" script needs the calendar to have a specific name. For it to work, go into Arc, right-click on the pinned Google Calendar tab and rename it to `RAYCAST_TARGET_CALENDAR_TAB`. You may change this name, but you'll have to update the `open-calendar.applescript` file accordingly. Also, keep in mind that this name must be unique across all tabs you will ever have.
 
