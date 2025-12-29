@@ -232,3 +232,10 @@ export function switchToLanguage(languageCode: string): LayerCommand {
     ],
   }
 }
+
+export function messagesChat(userId: string): LayerCommand {
+  return {
+    to: [{shell_command: `open -a Messages && open imessage://${userId}`}],
+    description: `Open Messages chat with ${userId}`,
+  }
+}
