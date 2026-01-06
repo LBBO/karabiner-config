@@ -234,31 +234,26 @@ export function switchToLanguage(languageCode: string): LayerCommand {
 }
 
 export function telegramChat(username: string): LayerCommand {
-  return deeplink(`tg://resolve?domain=@${username}`)
+  return open(`tg://resolve?domain=@${username}`)
 }
 
 export function signalChat(phoneNumber: string): LayerCommand {
-  return {
-    to: [
-      {
-        shell_command: `open -a "Signal.app" && open -g "sgnl://signal.me/#p/${phoneNumber}"`,
-      },
-    ],
-    description: `Open Signal chat for ${phoneNumber}`,
-  }
+  return open(`sgnl://signal.me/#p/${phoneNumber}`)
 }
 
 export function messagesChat(userId: string): LayerCommand {
-  return {
-    to: [
-      { shell_command: `open -a Messages && open -g "imessage://${userId}"` },
-    ],
-    description: `Open Messages chat with ${userId}`,
-  }
+  return open(`imessage://${userId}`)
 }
 
 export function slackChat(teamId: string, userId: string): LayerCommand {
-  return deeplink(`slack://user?team=${teamId}&id=${userId}`)
+  return open(`slack://user?team=${teamId}&id=${userId}`)
+}
+
+export function whatsappChat(phoneNumber: string): LayerCommand {
+  // Remove all non-digit characters, as required by
+  // https://faq.whatsapp.com/5913398998672934/?locale=en_US
+  const sanitized = phoneNumber.replaceAll(/[\D]+/g, '')
+  return open(`whatsapp://wa.me/${sanitized}`)
 }
 
 export function slackChannel(teamId: string, channelId: string): LayerCommand {
