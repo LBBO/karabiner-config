@@ -239,14 +239,20 @@ export function telegramChat(username: string): LayerCommand {
 
 export function signalChat(phoneNumber: string): LayerCommand {
   return {
-    to: [{ shell_command: `open -a "Signal.app" && open -g "sgnl://signal.me/#p/${phoneNumber}"` }],
+    to: [
+      {
+        shell_command: `open -a "Signal.app" && open -g "sgnl://signal.me/#p/${phoneNumber}"`,
+      },
+    ],
     description: `Open Signal chat for ${phoneNumber}`,
   }
 }
 
 export function messagesChat(userId: string): LayerCommand {
   return {
-    to: [{shell_command: `open -a Messages && open -g "imessage://${userId}"`}],
+    to: [
+      { shell_command: `open -a Messages && open -g "imessage://${userId}"` },
+    ],
     description: `Open Messages chat with ${userId}`,
   }
 }
