@@ -233,9 +233,24 @@ export function switchToLanguage(languageCode: string): LayerCommand {
   }
 }
 
+export function telegramChat(username: string): LayerCommand {
+  return deeplink(`tg://resolve?domain=@${username}`)
+}
+
+export function signalChat(phoneNumber: string): LayerCommand {
+  return {
+    to: [{ shell_command: `open -a "Signal.app" && open -g "sgnl://signal.me/#p/${phoneNumber}"` }],
+    description: `Open Signal chat for ${phoneNumber}`,
+  }
+}
+
 export function messagesChat(userId: string): LayerCommand {
   return {
-    to: [{shell_command: `open -a Messages && open imessage://${userId}`}],
+    to: [{shell_command: `open -a Messages && open -g "imessage://${userId}"`}],
     description: `Open Messages chat with ${userId}`,
   }
+}
+
+export function slackChat(teamId: string, userId: string): LayerCommand {
+  return deeplink(`slack://user?team=${teamId}&id=${userId}`)
 }

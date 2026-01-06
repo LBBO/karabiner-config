@@ -1,4 +1,4 @@
-import { privateChatDeepLinks, telegramUsernames } from './secrets'
+import { privateChatDeepLinks } from './secrets'
 import { app, deeplink, HyperKeyLayers } from './utils'
 
 export const privateRules: HyperKeyLayers = {
@@ -21,10 +21,6 @@ export const privateRules: HyperKeyLayers = {
     t: app('Telegram'),
     w: app('WhatsApp'),
     z: app('zoom.us'),
-
-    // Individual people
-    o: deeplink(`tg://resolve?domain=@${telegramUsernames.o}`),
-    y: deeplink(`tg://resolve?domain=@${telegramUsernames.y}`),
 
     ...privateChatDeepLinks,
   },
