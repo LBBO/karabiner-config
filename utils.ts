@@ -108,7 +108,7 @@ export function createHyperSubLayer(
  * activates at a time
  */
 export function createHyperSubLayers(
-  subLayers: HyperKeyLayer,
+  subLayers: HyperKeyLayers,
 ): KarabinerRules[] {
   const allSubLayerVariables = (
     Object.keys(subLayers) as (keyof typeof subLayers)[]
@@ -259,4 +259,8 @@ export function messagesChat(userId: string): LayerCommand {
 
 export function slackChat(teamId: string, userId: string): LayerCommand {
   return deeplink(`slack://user?team=${teamId}&id=${userId}`)
+}
+
+export function slackChannel(teamId: string, channelId: string): LayerCommand {
+  return deeplink(`slack://channel?team=${teamId}&id=${channelId}`)
 }
