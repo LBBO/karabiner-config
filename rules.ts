@@ -239,9 +239,21 @@ fs.writeFileSync(
       profiles: [
         {
           name: 'Default',
+          virtual_hid_keyboard: { keyboard_type_v2: 'ansi' },
           complex_modifications: {
             rules,
           },
+          devices: [
+            // Auto-enable for Nuphy Keyboards
+            {
+              identifiers: {
+                is_keyboard: true,
+                is_pointing_device: true,
+                vendor_id: 2007,
+              },
+              ignore: false,
+            },
+          ],
         },
       ],
     },
