@@ -15,6 +15,8 @@ import { hyperKeyRules } from './hyperKeyRules'
 import { VariableNames } from './variables'
 import { activate } from './variables'
 import { notifyAboutNormalMode } from './notifications'
+import { env } from './env'
+import { match } from '@gabriel/ts-pattern'
 
 const commonLayers: HyperKeyLayers = {
   // spacebar: deeplink(
@@ -226,8 +228,13 @@ const rules: KarabinerRules[] = [
   ...vimModeRules,
   ...createHyperSubLayers({
     ...commonLayers,
-    ...mergeSublayers(commonLayers, privateRules),
-    // ...mergeSublayers(commonLayers, workRules),
+    ...mergeSublayers(
+      commonLayers,
+      match(env.RULESET)
+        .with('private', () => privateRules)
+        .with('work', () => workRules)
+        .exhaustive(),
+    ),
   }),
 ]
 

@@ -14,5 +14,11 @@
   "scripts": {
     "build": "tsx rules.ts",
     "watch": "nodemon --exec pnpm run build -e ts"
+  },
+  "dependencies": {
+    "@gabriel/ts-pattern": "jsr:^5.9.0",
+    "@t3-oss/env-core": "jsr:^0.13.10",
+    "@zod/zod": "jsr:^4.3.5",
+    "dotenv": "^17.2.3"
   }
 }
