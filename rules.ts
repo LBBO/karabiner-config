@@ -22,8 +22,15 @@ const commonLayers: HyperKeyLayers = {
   // spacebar: deeplink(
   //   "raycast://extensions/stellate/mxstbr-commands/create-notion-todo"
   // ),
-  // b = "B"rowse
-  b: {},
+  // b = "B"rowser
+  b: {
+    a: app('Arc'),
+    f: app('Firefox'),
+    g: app('Google Chrome'),
+    s: app('Safari'),
+    v: app('Vivaldi'),
+    z: app('Zen Browser'),
+  },
 
   // o = "Open" applications
   o: {
@@ -91,12 +98,14 @@ const commonLayers: HyperKeyLayers = {
 
   // s = "System"
   s: {
+    // *A*ll *A*pps
+    a: app('Mission Control'),
     c: deeplink('raycast://extensions/raycast/system/open-camera'),
     m: deeplink(
       'raycast://extensions/Quentin23Soleil/mute-microphone/toggle-mute',
     ),
-    // *A*ll *A*pps
-    a: app('Mission Control'),
+    // *T*ask Manager
+    t: app('Activity Monitor'),
     u: {
       to: [
         {

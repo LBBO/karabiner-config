@@ -24,9 +24,4 @@ export const privateRules: HyperKeyLayers = {
 
     ...privateChatDeepLinks,
   },
-
-  // b = "Browser"
-  b: {
-    a: app('Arc'),
-  },
 }
