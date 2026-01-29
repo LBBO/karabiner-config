@@ -215,7 +215,9 @@ const mergeSublayers = (
   base: HyperKeyLayers,
   newLayers: HyperKeyLayers,
 ): HyperKeyLayers =>
-  Object.entries(newLayers).reduce((acc, [key, subLayer]): HyperKeyLayers => {
+  (
+    Object.entries(newLayers) as [keyof HyperKeyLayers, HyperKeyLayers][]
+  ).reduce((acc, [key, subLayer]): HyperKeyLayers => {
     return { ...acc, [key]: { ...(base[key] ?? {}), ...subLayer } }
   }, {})
 

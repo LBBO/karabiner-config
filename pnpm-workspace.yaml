@@ -1,0 +1,6 @@
+# Forbid packages that are < 1 week old
+minimumReleaseAge: 10080
+# Block deps from untrusted sources, e.g. git repos or tarballs)
+blockExoticSubdeps: true
+# Forbid removal e.g. of provenance
+trustPolicy: no-downgrade

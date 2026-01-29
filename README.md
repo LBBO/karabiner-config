@@ -21,23 +21,24 @@ You probably don't want to use my exact configuration, as it's optimized for my 
 5. [Restart karabiner_console_user_server](https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/) with `launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server`
 6. Add the `raycast-scripts` directory to your Raycast scripts by opening Raycast, going to the "Extensions" tab, searching for "Script Commands", click "Add Directories" and then choose the `raycast-scripts` directory in this repository
 7. The "Open Google Calendar in Arc" script needs the calendar to have a specific name. For it to work, go into Arc, right-click on the pinned Google Calendar tab and rename it to `RAYCAST_TARGET_CALENDAR_TAB`. You may change this name, but you'll have to update the `open-calendar.applescript` file accordingly. Also, keep in mind that this name must be unique across all tabs you will ever have.
+8. Generate the karabiner.json via `pnpm install && pnpm run build`. If you want to ensure you're using a supported pnpm version, you can install it via [mise](https://mise.jdx.dev/)
 
 ## Development
 
 ```
-yarn install
+pnpm install
 ```
 
 to install the dependencies. (one-time only)
 
 ```
-yarn run build
+pnpm run build
 ```
 
 builds the `karabiner.json` from the `rules.ts`.
 
 ```
-yarn run watch
+pnpm run watch
 ```
 
 watches the TypeScript files and rebuilds whenever they change.
