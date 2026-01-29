@@ -1,4 +1,4 @@
-import { workSlackDeepLinks } from './secrets'
+import { workChatDeepLinks } from './secrets'
 import { app, deeplink, HyperKeyLayers } from './utils'
 
 export const workRules: HyperKeyLayers = {
@@ -20,7 +20,7 @@ export const workRules: HyperKeyLayers = {
     // *V*ideo chat
     v: deeplink('raycast://extensions/vitoorgomes/google-meet/default-profile'),
 
-    ...workSlackDeepLinks,
+    ...workChatDeepLinks,
   },
 
   // j = "Jira"
