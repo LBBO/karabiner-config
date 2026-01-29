@@ -161,18 +161,28 @@ function generateSubLayerVariableName(key: KeyCode) {
 /**
  * Shortcut for "open" shell command
  */
-export function open(...what: string[]): LayerCommand {
+export function open(
+  ...what: (string | { target: string; options: string })[]
+): LayerCommand {
   return {
     to: what.map((w) => ({
-      shell_command: `open ${w}`,
+      shell_command:
+        typeof w === 'string'
+          ? `open "${w}"`
+          : `open ${w.options} "${w.target}"`,
     })),
-    description: `Open ${what.join(' & ')}`,
+    description: `Open ${what
+      .map((w) => (typeof w === 'string' ? w : w.target))
+      .join(' & ')}`,
   }
 }
 
 export const deeplink = (deepLink: string): LayerCommand =>
   // -g  Do not bring the application to the foreground.
-  open(`-g "${deepLink}"`)
+  open({
+    target: `"${deepLink}"`,
+    options: '-g',
+  })
 
 /**
  * Utility function to create a LayerCommand from a tagged template literal
@@ -215,7 +225,10 @@ export function rectangle(name: string): LayerCommand {
  * Shortcut for "Open an app" command (of which there are a bunch)
  */
 export function app(name: string): LayerCommand {
-  return open(`-a '${name}.app'`)
+  return open({
+    target: `${name}.app`,
+    options: '-a',
+  })
 }
 
 /**
@@ -257,5 +270,5 @@ export function whatsappChat(phoneNumber: string): LayerCommand {
 }
 
 export function slackChannel(teamId: string, channelId: string): LayerCommand {
-  return deeplink(`slack://channel?team=${teamId}&id=${channelId}`)
+  return open(`slack://channel?team=${teamId}&id=${channelId}`)
 }
