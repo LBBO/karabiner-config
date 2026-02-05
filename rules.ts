@@ -36,7 +36,7 @@ const commonLayers: HyperKeyLayers = {
   o: {
     b: app('Bruno'),
     f: app('Finder'),
-    i: app('IntelliJ IDEA Ultimate'),
+    i: app('IntelliJ IDEA'),
     // *l*iterature
     l: app('Zotero'),
     // *m*arkdown

@@ -10,7 +10,7 @@ export const workRules: HyperKeyLayers = {
     l: app('Logseq'),
     // *P*laywright is the only Chromium I run at work
     p: app('Chromium'),
-    w: app('IntelliJ IDEA Ultimate'),
+    w: app('IntelliJ IDEA'),
   },
 
   // c = "Chat"
