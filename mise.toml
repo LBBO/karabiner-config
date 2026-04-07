@@ -1,5 +1,5 @@
 [tools]
-pnpm = "10.28.2"
+pnpm = "10.33.0"
 
 [settings]
 pin = true
