@@ -5,11 +5,11 @@
   "author": "Max Stoiber <contact@mxstbr.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.7.19",
-    "nodemon": "^3.1.11",
-    "prettier": "2",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "@types/node": "18.19.130",
+    "nodemon": "3.1.11",
+    "prettier": "2.8.8",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
   },
   "scripts": {
     "build": "tsx rules.ts",
