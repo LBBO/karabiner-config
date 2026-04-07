@@ -6,6 +6,6 @@
     ":assignee(LBBO)",
     ":reviewer(LBBO)",
     ":combinePatchMinorReleases",
-    ":rebaseStalePrs",
+    ":rebaseStalePrs"
   ]
 }
