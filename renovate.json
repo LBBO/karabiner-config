@@ -8,5 +8,11 @@
     ":combinePatchMinorReleases",
     ":rebaseStalePrs"
   ],
-  "minimumReleaseAge": "1 week"
+  "minimumReleaseAge": "1 week",
+  "packageRules": [
+    {
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "1 week"
+    }
+  ]
 }
