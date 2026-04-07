@@ -7,5 +7,6 @@
     ":reviewer(LBBO)",
     ":combinePatchMinorReleases",
     ":rebaseStalePrs"
-  ]
+  ],
+  "minimumReleaseAge": "1 week"
 }
