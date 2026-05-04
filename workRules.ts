@@ -4,7 +4,7 @@ import { app, deeplink, HyperKeyLayers } from './utils'
 export const workRules: HyperKeyLayers = {
   // o = "Open" applications
   o: {
-    a: app('Arc'),
+    a: app('Zen'),
     c: deeplink('raycast://script-commands/open-calendar'),
     e: app('Microsoft Excel'),
     l: app('Logseq'),
