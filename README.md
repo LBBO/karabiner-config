@@ -20,7 +20,7 @@ You probably don't want to use my exact configuration, as it's optimized for my 
 4. Delete the default `~/.config/karabiner` folder
 5. Create a symlink with `ln -s ~/github/mxstbr/karabiner ~/.config/karabiner` (where `~/github/mxstbr/karabiner` is your local path to where you cloned the repository)
 6. [Restart karabiner_console_user_server](https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/) with `launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server`
-7. Add the `raycast-scripts` directory to your Raycast scripts by opening the Raycast settings, going to the "Extensions" tab, clicking the plus icon in the top-right corner, clicking "Add Script Directory" and then choosing the `raycast-scripts` directory in this repository
+7. Add the `raycast-scripts` directory to your Raycast scripts (as documented [here](https://github.com/raycast/script-commands#install-script-commands-from-this-repository)) by opening the Raycast settings, going to the "Extensions" tab, clicking the plus icon in the top-right corner, clicking "Add Script Directory" and then choosing the `raycast-scripts` directory in this repository
 8. The "Open Google Calendar in Arc" script needs the calendar to have a specific name. For it to work, go into Arc, right-click on the pinned Google Calendar tab and rename it to `RAYCAST_TARGET_CALENDAR_TAB`. You may change this name, but you'll have to update the `open-calendar.applescript` file accordingly. Also, keep in mind that this name must be unique across all tabs you will ever have.
 9. Install pnpm, either via [mise](https://mise.jdx.dev/) (preferred) or some other way and run `pnpm install`
 10. Generate the karabiner.json via `pnpm run build`
