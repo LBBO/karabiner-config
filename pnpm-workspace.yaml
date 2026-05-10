@@ -1,6 +1,8 @@
-# Forbid packages that are < 1 week old
-minimumReleaseAge: 10080
+allowBuilds:
+  esbuild: false
 # Block deps from untrusted sources, e.g. git repos or tarballs)
 blockExoticSubdeps: true
+# Forbid packages that are < 1 week old
+minimumReleaseAge: 10080
 # Forbid removal e.g. of provenance
 trustPolicy: no-downgrade
