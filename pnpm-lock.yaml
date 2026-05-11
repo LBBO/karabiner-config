@@ -16,7 +16,7 @@ importers:
         version: '@jsr/t3-oss__env-core@0.13.11(typescript@6.0.3)'
       '@zod/zod':
         specifier: jsr:^4.3.5
-        version: '@jsr/zod__zod@4.3.6'
+        version: '@jsr/zod__zod@4.4.2'
       dotenv:
         specifier: ^17.2.3
         version: 17.4.2
@@ -207,8 +207,8 @@ packages:
   '@jsr/t3-oss__env-core@0.13.11':
     resolution: {integrity: sha512-qZLkeXA62P+M529UFUBJUQLgUyBampMy+xRbz6Bk2z0DSOTNAJQdvargarp7zKJZLGAppcHbN4rOPIotrr3KUA==, tarball: https://npm.jsr.io/~/11/@jsr/t3-oss__env-core/0.13.11.tgz}
 
-  '@jsr/zod__zod@4.3.6':
-    resolution: {integrity: sha512-rYdCo6wp8azCkPKEvQKRezDHaopodw5UaW2J3KdSEU9PIejihBki3cJiMd7eyw3Sup0Q4mZeyZWdDbIFYdw3Iw==, tarball: https://npm.jsr.io/~/11/@jsr/zod__zod/4.3.6.tgz}
+  '@jsr/zod__zod@4.4.2':
+    resolution: {integrity: sha512-lyM+oKfWZ07sZmND7ofgh2/O3X73OBf3uFTNitSmESqR5SLToF3ijwX7Vh/NtAoBIjFxOv7yKrehVAbfeAplWg==, tarball: https://npm.jsr.io/~/11/@jsr/zod__zod/4.4.2.tgz}
 
   '@types/node@24.12.2':
     resolution: {integrity: sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g==}
@@ -476,7 +476,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@jsr/zod__zod@4.3.6': {}
+  '@jsr/zod__zod@4.4.2': {}
 
   '@types/node@24.12.2':
     dependencies:
