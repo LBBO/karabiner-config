@@ -1,4 +1,5 @@
 [tools]
+"cargo:nono-cli" = "0.54.0"
 pnpm = "11.0.9"
 
 [settings]
