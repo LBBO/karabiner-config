@@ -1,0 +1,55 @@
+name: Fix Renovate mise.lock
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  fix-mise-lock:
+    if: >-
+      github.event.issue.pull_request != null &&
+      github.event.comment.user.login == 'renovate[bot]' &&
+      contains(github.event.comment.body, 'File name: mise.lock')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get PR branch
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            core.setOutput('head_ref', pr.data.head.ref);
+
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install mise
+        uses: jdx/mise-action@v2
+        with:
+          install: false
+
+      - name: Regenerate mise.lock
+        env:
+          MISE_YES: "1"
+        run: |
+          mise lock
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git diff --quiet mise.lock && exit 0
+          git add mise.lock
+          git commit -m "chore: regenerate mise.lock"
+          git push
