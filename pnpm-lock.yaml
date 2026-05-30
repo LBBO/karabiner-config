@@ -16,7 +16,7 @@ importers:
         version: '@jsr/t3-oss__env-core@0.13.11(typescript@6.0.3)'
       '@zod/zod':
         specifier: jsr:^4.3.5
-        version: '@jsr/zod__zod@4.4.2'
+        version: '@jsr/zod__zod@4.4.3'
       dotenv:
         specifier: ^17.2.3
         version: 17.4.2
@@ -207,8 +207,8 @@ packages:
   '@jsr/t3-oss__env-core@0.13.11':
     resolution: {integrity: sha512-qZLkeXA62P+M529UFUBJUQLgUyBampMy+xRbz6Bk2z0DSOTNAJQdvargarp7zKJZLGAppcHbN4rOPIotrr3KUA==, tarball: https://npm.jsr.io/~/11/@jsr/t3-oss__env-core/0.13.11.tgz}
 
-  '@jsr/zod__zod@4.4.2':
-    resolution: {integrity: sha512-lyM+oKfWZ07sZmND7ofgh2/O3X73OBf3uFTNitSmESqR5SLToF3ijwX7Vh/NtAoBIjFxOv7yKrehVAbfeAplWg==, tarball: https://npm.jsr.io/~/11/@jsr/zod__zod/4.4.2.tgz}
+  '@jsr/zod__zod@4.4.3':
+    resolution: {integrity: sha512-MSBpUXksX0So5K6mU8QCt1kNBZ8Dkd6IoTMCqrra8ED0U2RM9eqRrM7IJMgcVJMYoDMaZyhOIPgY+ZVEJI5Y9w==, tarball: https://npm.jsr.io/~/11/@jsr/zod__zod/4.4.3.tgz}
 
   '@types/node@24.12.4':
     resolution: {integrity: sha512-GUUEShf+PBCGW2KaXwcIt3Yk+e3pkKwWKb9GSyM9WQVE+ep2jzmHdGsHzu4wgcZy5fN9FBdVzjpBQsYlpfpgLA==}
@@ -228,8 +228,8 @@ packages:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
 
-  brace-expansion@5.0.5:
-    resolution: {integrity: sha512-VZznLgtwhn+Mact9tfiwx64fA9erHH/MCXEUfB/0bX/6Fz6ny5EGTXYltMocqg4xFAQZtnO3DHWWXi8RiuN7cQ==}
+  brace-expansion@5.0.6:
+    resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
     engines: {node: 18 || 20 || >=22}
 
   braces@3.0.3:
@@ -326,8 +326,8 @@ packages:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
 
-  semver@7.7.4:
-    resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
+  semver@7.8.1:
+    resolution: {integrity: sha512-rkVq3IXh+4FDGch+KwzX3aV9W3kO54GyEgpvBzSyctDA6Xtd7RJQV1xmXbeQp5v7+VzLOfVqiutSE6GICgPFvg==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -470,7 +470,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@jsr/zod__zod@4.4.2': {}
+  '@jsr/zod__zod@4.4.3': {}
 
   '@types/node@24.12.4':
     dependencies:
@@ -490,7 +490,7 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
-  brace-expansion@5.0.5:
+  brace-expansion@5.0.6:
     dependencies:
       balanced-match: 4.0.4
 
@@ -576,7 +576,7 @@ snapshots:
 
   minimatch@10.2.5:
     dependencies:
-      brace-expansion: 5.0.5
+      brace-expansion: 5.0.6
 
   ms@2.1.3: {}
 
@@ -587,7 +587,7 @@ snapshots:
       ignore-by-default: 1.0.1
       minimatch: 10.2.5
       pstree.remy: 1.1.8
-      semver: 7.7.4
+      semver: 7.8.1
       simple-update-notifier: 2.0.0
       supports-color: 5.5.0
       touch: 3.1.1
@@ -605,11 +605,11 @@ snapshots:
     dependencies:
       picomatch: 2.3.2
 
-  semver@7.7.4: {}
+  semver@7.8.1: {}
 
   simple-update-notifier@2.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.1
 
   supports-color@5.5.0:
     dependencies:
