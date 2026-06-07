@@ -25,6 +25,7 @@ const commonLayers: HyperKeyLayers = {
   // b = "B"rowser
   b: {
     a: app('Arc'),
+    c: app('Google Chrome'),
     f: app('Firefox'),
     g: app('Google Chrome'),
     s: app('Safari'),
