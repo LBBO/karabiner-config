@@ -105,6 +105,8 @@ const commonLayers: HyperKeyLayers = {
     m: deeplink(
       'raycast://extensions/Quentin23Soleil/mute-microphone/toggle-mute',
     ),
+    // *N*otification
+    n: deeplink('raycast://script-commands/open-notification-tray'),
     // *T*ask Manager
     t: app('Activity Monitor'),
     u: {
