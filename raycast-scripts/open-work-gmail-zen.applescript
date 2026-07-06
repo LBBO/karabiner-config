@@ -17,6 +17,7 @@
 tell application "zen" to activate
 tell application "System Events"
 	tell process "zen"
+		keystroke "2" using control down
 		keystroke "1" using command down
 	end tell
 end tell
