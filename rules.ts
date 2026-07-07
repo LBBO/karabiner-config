@@ -70,8 +70,13 @@ const commonLayers: HyperKeyLayers = {
     z: deeplink('raycast://extensions/ewgenius/zed-recent-projects/search'),
   },
 
-  // u = "University"
-  u: {},
+  // d = "Displays"
+  d: {
+    // *N*ormal arrangement
+    n: deeplink('raycast://extensions/eluce2/displayplacer/preset1'),
+    // *M*obile arrangement
+    m: deeplink('raycast://extensions/eluce2/displayplacer/preset2'),
+  },
 
   // l = "Language"
   l: {
