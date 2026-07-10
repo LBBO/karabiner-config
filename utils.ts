@@ -180,7 +180,7 @@ export function open(
 export const deeplink = (deepLink: string): LayerCommand =>
   // -g  Do not bring the application to the foreground.
   open({
-    target: `"${deepLink}"`,
+    target: deepLink,
     options: '-g',
   })
 
