@@ -1,6 +1,6 @@
 [tools]
 "cargo:nono-cli" = "0.66.0"
-pnpm = "11.9.0"
+pnpm = "11.10.0"
 rust = "1.96.0"
 
 [settings]
