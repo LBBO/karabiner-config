@@ -1,7 +1,7 @@
 [tools]
 "cargo:nono-cli" = "0.67.0"
-pnpm = "11.10.0"
-rust = "1.96.1"
+pnpm = "11.11.0"
+rust = "1.97.0"
 
 [settings]
 pin = true
