@@ -1,5 +1,5 @@
 [tools]
-"cargo:nono-cli" = "0.67.0"
+"cargo:nono-cli" = "0.68.0"
 pnpm = "11.11.0"
 rust = "1.97.0"
 
