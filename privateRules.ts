@@ -8,7 +8,6 @@ export const privateRules: HyperKeyLayers = {
     3: app('FreeCAD'),
     // Used to be *A*rc
     a: app('Zen Browser'),
-    c: app('Cursor'),
     // *m*arkdown
     n: app('Notion'),
     // p: app('PyCharm'),
