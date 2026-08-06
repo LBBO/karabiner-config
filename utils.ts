@@ -250,8 +250,13 @@ export function telegramChat(username: string): LayerCommand {
   return open(`tg://resolve?domain=@${username}`)
 }
 
-export function signalChat(phoneNumber: string): LayerCommand {
-  return open(`sgnl://signal.me/#p/${phoneNumber}`)
+export function signalChat(
+  options: { phoneNumber: string } | { username: string },
+): LayerCommand {
+  if ('username' in options) {
+    return open(`sgnl://signal.me/#eu/${options.username}`)
+  }
+  return open(`sgnl://signal.me/#p/${options.phoneNumber}`)
 }
 
 export function messagesChat(userId: string): LayerCommand {

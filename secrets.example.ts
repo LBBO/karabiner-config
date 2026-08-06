@@ -25,7 +25,7 @@ export const privateChatDeepLinks: Record<string, LayerCommand> = {
   // Whatsapp chat with Charlie
   c: whatsappChat('+1234567890'),
   // Signal chat with David
-  d: signalChat('+0987654321'),
+  d: signalChat({ phoneNumber: '+0987654321' }),
   // iMessage chat with Eve
   e: messagesChat('eve@example.com'),
 }
