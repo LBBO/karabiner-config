@@ -253,25 +253,23 @@ const enteringAndLeavingVisualModeRules: Manipulator[] = [
       notifyAboutVisualMode,
     ],
   },
-  ...(['v', 'escape', 'caps_lock'] as const).map(
-    (key_code): Manipulator => ({
-      type: 'basic',
-      description: `Visual Mode -> Normal Mode (${key_code})`,
-      from: { key_code },
-      conditions: [
-        isActive(VariableNames.Vim.VisualMode),
-        isNotActive(VariableNames.Vim.NormalMode),
-        notInAppWithNativeVim,
-      ],
-      to: [
-        activate(VariableNames.Vim.NormalMode),
-        deactivate(VariableNames.Vim.VisualMode),
-        deactivate(VariableNames.Vim.InnerSelection),
-        deactivate(VariableNames.Vim.OuterSelection),
-        notifyAboutNormalMode,
-      ],
-    }),
-  ),
+  ...(['v', 'escape', 'caps_lock'] as const).map((key_code): Manipulator => ({
+    type: 'basic',
+    description: `Visual Mode -> Normal Mode (${key_code})`,
+    from: { key_code },
+    conditions: [
+      isActive(VariableNames.Vim.VisualMode),
+      isNotActive(VariableNames.Vim.NormalMode),
+      notInAppWithNativeVim,
+    ],
+    to: [
+      activate(VariableNames.Vim.NormalMode),
+      deactivate(VariableNames.Vim.VisualMode),
+      deactivate(VariableNames.Vim.InnerSelection),
+      deactivate(VariableNames.Vim.OuterSelection),
+      notifyAboutNormalMode,
+    ],
+  })),
 ]
 
 const visualModeActions: VimModeLayerRules = {
@@ -345,25 +343,23 @@ const enteringAndLeavingDeleteModeRules: Manipulator[] = [
       activate(VariableNames.Vim.NormalMode),
     ],
   },
-  ...(['escape', 'caps_lock'] as const).map(
-    (key_code): Manipulator => ({
-      type: 'basic',
-      description: `Stop deleting (${key_code})`,
-      from: { key_code },
-      conditions: [
-        isActive(VariableNames.Vim.DeleteMode),
-        isNotActive(VariableNames.Vim.NormalMode),
-        notInAppWithNativeVim,
-      ],
-      to: [
-        activate(VariableNames.Vim.NormalMode),
-        deactivate(VariableNames.Vim.DeleteMode),
-        deactivate(VariableNames.Vim.InnerSelection),
-        deactivate(VariableNames.Vim.OuterSelection),
-        notifyAboutNormalMode,
-      ],
-    }),
-  ),
+  ...(['escape', 'caps_lock'] as const).map((key_code): Manipulator => ({
+    type: 'basic',
+    description: `Stop deleting (${key_code})`,
+    from: { key_code },
+    conditions: [
+      isActive(VariableNames.Vim.DeleteMode),
+      isNotActive(VariableNames.Vim.NormalMode),
+      notInAppWithNativeVim,
+    ],
+    to: [
+      activate(VariableNames.Vim.NormalMode),
+      deactivate(VariableNames.Vim.DeleteMode),
+      deactivate(VariableNames.Vim.InnerSelection),
+      deactivate(VariableNames.Vim.OuterSelection),
+      notifyAboutNormalMode,
+    ],
+  })),
   // Use the abstracted selection API for delete mode
   ...createSelectionModeRules(
     'Delete',
@@ -405,20 +401,18 @@ const enteringAndLeavingYankModeRules: Manipulator[] = [
       activate(VariableNames.Vim.NormalMode),
     ],
   },
-  ...(['escape', 'caps_lock'] as const).map(
-    (key_code): Manipulator => ({
-      type: 'basic',
-      description: `Stop yanking (${key_code})`,
-      from: { key_code },
-      conditions: [isActive(VariableNames.Vim.YankMode), notInAppWithNativeVim],
-      to: [
-        activate(VariableNames.Vim.NormalMode),
-        deactivate(VariableNames.Vim.YankMode),
-        deactivate(VariableNames.Vim.InnerSelection),
-        deactivate(VariableNames.Vim.OuterSelection),
-      ],
-    }),
-  ),
+  ...(['escape', 'caps_lock'] as const).map((key_code): Manipulator => ({
+    type: 'basic',
+    description: `Stop yanking (${key_code})`,
+    from: { key_code },
+    conditions: [isActive(VariableNames.Vim.YankMode), notInAppWithNativeVim],
+    to: [
+      activate(VariableNames.Vim.NormalMode),
+      deactivate(VariableNames.Vim.YankMode),
+      deactivate(VariableNames.Vim.InnerSelection),
+      deactivate(VariableNames.Vim.OuterSelection),
+    ],
+  })),
   ...createSelectionModeRules(
     'Yank',
     VariableNames.Vim.YankMode,
@@ -461,23 +455,21 @@ const enteringAndLeavingChangeModeRules: Manipulator[] = [
       activate(VariableNames.Vim.NormalMode),
     ],
   },
-  ...(['escape', 'caps_lock'] as const).map(
-    (key_code): Manipulator => ({
-      type: 'basic',
-      description: `Stop changing (${key_code})`,
-      from: { key_code },
-      conditions: [
-        isActive(VariableNames.Vim.ChangeMode),
-        isNotActive(VariableNames.Vim.NormalMode),
-        notInAppWithNativeVim,
-      ],
-      to: [
-        activate(VariableNames.Vim.NormalMode),
-        deactivate(VariableNames.Vim.ChangeMode),
-        notifyAboutNormalMode,
-      ],
-    }),
-  ),
+  ...(['escape', 'caps_lock'] as const).map((key_code): Manipulator => ({
+    type: 'basic',
+    description: `Stop changing (${key_code})`,
+    from: { key_code },
+    conditions: [
+      isActive(VariableNames.Vim.ChangeMode),
+      isNotActive(VariableNames.Vim.NormalMode),
+      notInAppWithNativeVim,
+    ],
+    to: [
+      activate(VariableNames.Vim.NormalMode),
+      deactivate(VariableNames.Vim.ChangeMode),
+      notifyAboutNormalMode,
+    ],
+  })),
   // Use the abstracted selection API for change mode
   ...createSelectionModeRules(
     'Change',
@@ -508,15 +500,13 @@ const disableUnusedKeysRules = [
   VariableNames.Vim.YankMode,
   VariableNames.Vim.ChangeMode,
 ].flatMap((mode) => [
-  ...notDisabledModifiers.map(
-    (key_code): Manipulator => ({
-      type: 'basic',
-      description: `Disable ${key_code} in ${mode}`,
-      from: { key_code, modifiers: { optional: ['any'] } },
-      conditions: [isActive(mode), notInAppWithNativeVim],
-      to: [{ key_code }],
-    }),
-  ),
+  ...notDisabledModifiers.map((key_code): Manipulator => ({
+    type: 'basic',
+    description: `Disable ${key_code} in ${mode}`,
+    from: { key_code, modifiers: { optional: ['any'] } },
+    conditions: [isActive(mode), notInAppWithNativeVim],
+    to: [{ key_code }],
+  })),
   {
     type: 'basic',
     from: {

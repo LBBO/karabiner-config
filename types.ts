@@ -40,10 +40,7 @@ export type FrontMostApplicationCondition = {
 
 type DeviceCondition = {
   type:
-    | 'device_if'
-    | 'device_unless'
-    | 'device_exists_if'
-    | 'device_exists_unless'
+    'device_if' | 'device_unless' | 'device_exists_if' | 'device_exists_unless'
   identifiers: Identifiers
   description?: string
 }

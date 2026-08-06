@@ -41,7 +41,7 @@ jobs:
 
       - name: Regenerate mise.lock
         env:
-          MISE_YES: "1"
+          MISE_YES: '1'
         run: |
           mise lock
 
