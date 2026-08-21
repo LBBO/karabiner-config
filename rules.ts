@@ -198,6 +198,8 @@ const commonLayers: HyperKeyLayers = {
     h: deeplink(
       'raycast://extensions/raycast/clipboard-history/clipboard-history',
     ),
+    // *I*mage search
+    i: deeplink('raycast://extensions/jag-k/duckduckgo-image-search/search-image'),
     m: deeplink('raycast://extensions/raycast/navigation/search-menu-items'),
     n: deeplink('raycast://extensions/raycast/raycast-notes/raycast-notes'),
     p: deeplink('raycast://extensions/raycast/raycast/confetti'),
