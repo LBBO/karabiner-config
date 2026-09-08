@@ -106,12 +106,12 @@ const commonLayers: HyperKeyLayers = {
   s: {
     // *A*ll *A*pps
     a: app('Mission Control'),
-    c: deeplink('raycast://extensions/raycast/system/open-camera'),
+    c: deeplink('raycast://extensions/raycast/raycast/open-camera'),
     m: deeplink(
       'raycast://extensions/Quentin23Soleil/mute-microphone/toggle-mute',
     ),
     // *N*otification
-    n: deeplink('raycast://script-commands/open-notification-tray'),
+    n: deeplink('raycast://extensions/raycast/script-commands/toggle-notification-center'),
     // *T*ask Manager
     t: app('Activity Monitor'),
     u: {
@@ -189,7 +189,7 @@ const commonLayers: HyperKeyLayers = {
 
   // r = "Raycast"
   r: {
-    a: deeplink('raycast://extensions/raycast/raycast-ai/ai-chat'),
+    a: deeplink('raycast://extensions/raycast/ai/ai-chat'),
     e: deeplink(
       'raycast://extensions/raycast/emoji-symbols/search-emoji-symbols',
     ),
@@ -226,9 +226,9 @@ const commonLayers: HyperKeyLayers = {
       'raycast://extensions/raycast/window-management/toggle-fullscreen',
     ),
     p: deeplink(
-      'raycast://extensions/raycast/window-management/previous-display',
+      'raycast://extensions/raycast/window-management/move-to-previous-display',
     ),
-    n: deeplink('raycast://extensions/raycast/window-management/next-display'),
+    n: deeplink('raycast://extensions/raycast/window-management/move-to-next-display'),
   },
 }
 

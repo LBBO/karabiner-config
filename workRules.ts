@@ -5,7 +5,7 @@ export const workRules: HyperKeyLayers = {
   // o = "Open" applications
   o: {
     a: app('Zen'),
-    c: deeplink('raycast://script-commands/open-calendar-zen'),
+    c: deeplink('raycast://extensions/raycast/script-commands/open-google-calendar-in-zen'),
     e: app('Microsoft Excel'),
     l: app('Logseq'),
     // *P*laywright is the only Chromium I run at work
@@ -16,7 +16,7 @@ export const workRules: HyperKeyLayers = {
   // c = "Chat"
   c: {
     s: app('Slack'),
-    m: deeplink('raycast://script-commands/open-work-gmail-zen'),
+    m: deeplink('raycast://extensions/raycast/script-commands/open-work-gmail-zen'),
     // *V*ideo chat
     v: deeplink('raycast://extensions/vitoorgomes/google-meet/default-profile'),
 

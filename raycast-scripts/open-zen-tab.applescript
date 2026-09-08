@@ -2,7 +2,7 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title Switch Zen Tab
+# @raycast.title Open Zen Tab
 # @raycast.mode compact
 
 # Optional parameters:
