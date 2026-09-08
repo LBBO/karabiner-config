@@ -27,5 +27,7 @@ export const workRules: HyperKeyLayers = {
   j: {
     // *F*ind
     f: deeplink('raycast://extensions/raycast/jira/search-issues'),
+    // *O*pen
+    o: deeplink('raycast://extensions/raycast/jira/open-issues'),
   },
 }

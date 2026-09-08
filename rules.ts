@@ -55,7 +55,6 @@ const commonLayers: HyperKeyLayers = {
 
   // n = "New"
   n: {
-    c: deeplink('raycast://extensions/degouville/cursor-recent-projects/index'),
     t: {
       to: [
         // This shortcut is set in TickTick because the default
