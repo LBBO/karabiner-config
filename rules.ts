@@ -199,7 +199,7 @@ const commonLayers: HyperKeyLayers = {
     ),
     // *I*mage search
     i: deeplink('raycast://extensions/jag-k/duckduckgo-image-search/search-image'),
-    m: deeplink('raycast://extensions/raycast/navigation/search-menu-items'),
+    m: deeplink('raycast://extensions/raycast/navigation/search-menu-bar-items'),
     n: deeplink('raycast://extensions/raycast/raycast-notes/raycast-notes'),
     p: deeplink('raycast://extensions/raycast/raycast/confetti'),
     t: deeplink('raycast://extensions/raycast/translator/translate'),
