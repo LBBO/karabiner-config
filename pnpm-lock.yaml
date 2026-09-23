@@ -22,8 +22,8 @@ importers:
         version: 17.4.2
     devDependencies:
       '@types/node':
-        specifier: 24.13.4
-        version: 24.13.4
+        specifier: 24.13.5
+        version: 24.13.5
       nodemon:
         specifier: 3.1.14
         version: 3.1.14
@@ -210,8 +210,8 @@ packages:
   '@jsr/zod__zod@4.4.3':
     resolution: {integrity: sha512-MSBpUXksX0So5K6mU8QCt1kNBZ8Dkd6IoTMCqrra8ED0U2RM9eqRrM7IJMgcVJMYoDMaZyhOIPgY+ZVEJI5Y9w==, tarball: https://npm.jsr.io/~/11/@jsr/zod__zod/4.4.3.tgz}
 
-  '@types/node@24.13.4':
-    resolution: {integrity: sha512-YJ7EqCstVTzIr0fMr7qul/977en+pQHrfmuKIo6Zr9i75Be21dr3MovcfvGtyvi2HAUrRerWps5sMO9I7WaxDw==}
+  '@types/node@24.13.5':
+    resolution: {integrity: sha512-TXyindR+lBr22aJIdMQzCFHPHR6cR4js838mRDCSz5hOKWZvZwsXSSiXDmjRj4iJmgl+sR9O+1mkoVBSMadNug==}
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     resolution: {integrity: sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==}
@@ -592,7 +592,7 @@ snapshots:
 
   '@jsr/zod__zod@4.4.3': {}
 
-  '@types/node@24.13.4':
+  '@types/node@24.13.5':
     dependencies:
       undici-types: 7.18.2
 
