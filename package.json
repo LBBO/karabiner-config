@@ -19,6 +19,6 @@
     "@gabriel/ts-pattern": "jsr:^5.9.0",
     "@t3-oss/env-core": "jsr:^0.13.10",
     "@zod/zod": "jsr:^4.3.5",
-    "dotenv": "^17.2.3"
+    "dotenv": "^18.0.0"
   }
 }
