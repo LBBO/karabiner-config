@@ -1,7 +1,7 @@
 [tools]
-"cargo:nono-cli" = "0.78.0"
+"cargo:nono-cli" = "0.79.0"
 pnpm = "12.8.2"
-rust = "1.98.1"
+rust = "1.99.0"
 
 [settings]
 pin = true
