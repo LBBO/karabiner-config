@@ -19,7 +19,7 @@ importers:
         version: '@jsr/zod__zod@4.4.3'
       dotenv:
         specifier: ^18.0.0
-        version: 18.0.7
+        version: 18.0.8
     devDependencies:
       '@types/node':
         specifier: 24.19.2
@@ -369,8 +369,8 @@ packages:
       supports-color:
         optional: true
 
-  dotenv@18.0.7:
-    resolution: {integrity: sha512-QEvMEF8ca3GNZJJnAbOgxpj5ULhBvnMcURp+XKrtvqFNPgjBvYoswQ0Jl2cO7JzCjxZjJhr9ZuIEhlrRxMft/Q==}
+  dotenv@18.0.8:
+    resolution: {integrity: sha512-2KDeoFoK/zRtcnbunCDlLG5VWVMcyqeQc6iK65o231nfNAcuGrKoqUQfJFUtBI+QlShk5HKIHxwebBtUl3rEfA==}
     engines: {node: '>=12'}
     hasBin: true
 
@@ -697,7 +697,7 @@ snapshots:
     optionalDependencies:
       supports-color: 5.5.0
 
-  dotenv@18.0.7: {}
+  dotenv@18.0.8: {}
 
   esbuild@0.28.0:
     optionalDependencies:
